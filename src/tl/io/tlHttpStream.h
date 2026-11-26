@@ -1,0 +1,244 @@
+#pragma once
+
+
+#include "tlObject.h"
+#include "tlException.h"
+#include "tlStream.h"
+#include "tlEvents.h"
+
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QNetworkProxy>
+#include <QAuthenticator>
+#include <QCoreApplication>
+#include <QDateTime>
+#include <QFileInfo>
+#include <QDialog>
+#include <QBuffer>
+#include <QTimer>
+
+class QNetworkReply;
+
+namespace tl
+{
+
+/**
+ *  @brief A callback interface to provide the authentication data
+ */
+class TL_PUBLIC HttpCredentialProvider
+  : public tl::Object
+{
+public:
+  HttpCredentialProvider () { }
+  virtual ~HttpCredentialProvider () { }
+
+  /**
+   *  @brief Gets the user name and password for the given URL and authentication realm
+   */
+  virtual bool user_password (const std::string &url, const std::string &realm, bool proxy, int attempt, std::string &user, std::string &passwd) = 0;
+};
+
+/**
+ *  @brief An exception class for HTTP errors
+ */
+class TL_PUBLIC HttpErrorException
+  : public tl::Exception
+{
+public:
+  HttpErrorException (const std::string &f, int ec, const std::string &url, const std::string &body = std::string ())
+    : tl::Exception (format_error (f, ec, url, body))
+  { }
+
+  static std::string format_error (const std::string &em, int ec, const std::string &url, const std::string &body);
+};
+
+class AuthenticationHandler
+    : public QObject
+{
+    Q_OBJECT
+
+public:
+    AuthenticationHandler ();
+
+public slots:
+    void authenticationRequired (QNetworkReply *, QAuthenticator *);
+    void proxyAuthenticationRequired (const QNetworkProxy &, QAuthenticator *);
+    void reset ();
+
+private:
+    int m_retry, m_proxy_retry;
+};
+
+
+class InputHttpStreamPrivateData
+    : public QObject
+{
+    Q_OBJECT
+
+public:
+    InputHttpStreamPrivateData (const std::string &url);
+
+    virtual ~InputHttpStreamPrivateData ();
+
+    void send ();
+    void close ();
+    void set_request (const char *r);
+    void set_data (const char *data);
+    void set_data (const char *data, size_t n);
+    void add_header (const std::string &name, const std::string &value);
+
+    tl::Event &ready ()
+    {
+        return m_ready;
+    }
+
+    bool data_available ()
+    {
+        return mp_reply != 0;
+    }
+
+    virtual size_t read (char *b, size_t n);
+    virtual void reset ();
+
+    virtual std::string source () const
+    {
+        return m_url;
+    }
+
+    virtual std::string absolute_path () const
+    {
+        return m_url;
+    }
+
+    virtual std::string filename () const;
+
+private slots:
+    void finished (QNetworkReply *);
+    void resend ();
+
+private:
+    std::string m_url;
+    QNetworkReply *mp_reply;
+    std::unique_ptr<QNetworkReply> mp_active_reply;
+    QByteArray m_request;
+    QByteArray m_data;
+    QBuffer *mp_buffer;
+    std::map<std::string, std::string> m_headers;
+    tl::Event m_ready;
+    QTimer *mp_resend_timer;
+
+    void issue_request (const QUrl &url);
+};
+
+/**
+ *  @brief A http input delegate for tl::InputStream
+ *
+ *  Implements the reader from a server using the HTTP protocol
+ */
+class TL_PUBLIC InputHttpStream
+  : public InputStreamBase
+{
+public:
+  /**
+   *  @brief Open a stream with the given URL
+   */
+  InputHttpStream (const std::string &url);
+
+  /**
+   *  @brief Close the file
+   *
+   *  The destructor will automatically close the connection.
+   */
+  virtual ~InputHttpStream ();
+
+  /**
+   *  @brief Sets the credential provider
+   */
+  static void set_credential_provider (HttpCredentialProvider *cp);
+
+  /**
+   *  @brief Returns true, if HTTP support is compiled in
+   */
+  static bool is_available ();
+
+  /**
+   *  @brief Polling: call this function regularly to explicitly establish polling
+   *  (in the Qt framework, this is done automatically within the event loop)
+   */
+  void tick ();
+
+  /**
+   *  @brief Sends the request for data
+   *  To ensure prompt delivery of data, this method can be used prior to
+   *  "read" to trigger the download from the given URL.
+   *  This method will return immediately. When the reply is available,
+   *  the "ready" event will be triggered. "read" can then be used to
+   *  read the data or - in case of an error - throw an exception.
+   *  If "send" is not used before "read", "read" will block until data
+   *  is available.
+   *  If a request has already been sent, this method will do nothing.
+   */
+  void send ();
+
+  /**
+   *  @brief Closes the connection
+   */
+  void close ();
+
+  /**
+   *  @brief Sets the request verb
+   *  The default verb is "GET"
+   */
+  void set_request (const char *r);
+
+  /**
+   *  @brief Sets data to be sent with the request
+   *  If data is given, it is sent along with the request.
+   *  This version takes a null-terminated string.
+   */
+  void set_data (const char *data);
+
+  /**
+   *  @brief Sets data to be sent with the request
+   *  If data is given, it is sent along with the request.
+   *  This version takes a data plus length.
+   */
+  void set_data (const char *data, size_t n);
+
+  /**
+   *  @brief Sets a header field
+   */
+  void add_header (const std::string &name, const std::string &value);
+
+  /**
+   *  @brief Gets the "ready" event
+   *  Connect to this event for the asynchronous interface.
+   *  This event is fired when data becomes available or the
+   *  connection has terminated with an error.
+   */
+  tl::Event &ready ();
+
+  /**
+   *  @brief Gets a value indicating whether data is available
+   */
+  bool data_available ();
+
+  /**
+   *  @brief Read from the stream
+   *  Implements the basic read method.
+   */
+  virtual size_t read (char *b, size_t n);
+
+  virtual void reset ();
+  virtual std::string source () const;
+  virtual std::string absolute_path () const;
+  virtual std::string filename () const;
+
+private:
+  InputHttpStreamPrivateData *mp_data;
+};
+
+}
+
+
