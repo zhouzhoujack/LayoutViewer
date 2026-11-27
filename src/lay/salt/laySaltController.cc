@@ -152,7 +152,7 @@ SaltController::sync_file_watcher ()
 void
 SaltController::sync_files ()
 {
-  tl::log << geo::to_string (tr ("Detected file system change in packages - updating"));
+  LOGI << geo::to_string (tr ("Detected file system change in packages - updating"));
   emit salt_changed ();
 }
 
@@ -163,7 +163,7 @@ SaltController::install_packages (const std::vector<std::string> &packages, bool
 
   lay::Salt salt_mine;
   if (! m_salt_mine_url.empty ()) {
-    tl::log << geo::to_string (tr ("Downloading package repository from %1").arg (geo::to_qstring (m_salt_mine_url)));
+    LOGI << geo::to_string (tr ("Downloading package repository from %1").arg (geo::to_qstring (m_salt_mine_url)));
     salt_mine.load (m_salt_mine_url);
   }
 
@@ -211,13 +211,13 @@ SaltController::add_path (const std::string &path)
 
     std::string tp = geo::to_string (QDir (geo::to_qstring (path)).filePath (QString::fromUtf8 ("salt")));
 
-    tl::log << geo::to_string (tr ("Scanning %1 for packages").arg (geo::to_qstring (tp)));
+    LOGI << geo::to_string (tr ("Scanning %1 for packages").arg (geo::to_qstring (tp)));
     m_salt.add_location (tp);
 
     dm_sync_file_watcher ();
 
   } catch (tl::Exception &ex) {
-    tl::error << ex.msg ();
+    LOGE << ex.msg ();
   }
 }
 

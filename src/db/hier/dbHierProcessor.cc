@@ -543,8 +543,8 @@ local_processor_cell_contexts<TS, TI, TR>::compute_results (const local_processo
     proc->next ();
     ++index;
 
-    if (tl::verbosity () >= proc->base_verbosity () + 20) {
-      tl::log << tr ("Computing local results for ") << cell->layout ()->cell_name (cell->cell_index ()) << " (context " << index << "/" << total << ")";
+    if (toolkit::logkit::verbosity () >= proc->base_verbosity () + 20) {
+      LOGI << tr ("Computing local results for ") << cell->layout ()->cell_name (cell->cell_index ()) << " (context " << index << "/" << total << ")";
     }
 
     if (first) {
@@ -1340,7 +1340,7 @@ void local_processor<TS, TI, TR>::run (local_operation<TS, TI, TR> *op, unsigned
 template <class TS, class TI, class TR>
 void local_processor<TS, TI, TR>::run (local_operation<TS, TI, TR> *op, unsigned int subject_layer, const std::vector<unsigned int> &intruder_layers, const std::vector<unsigned int> &output_layers)
 {
-  tl::SelfTimer timer (tl::verbosity () > m_base_verbosity, tl::to_string (tr ("Executing ")) + description (op));
+  tl::SelfTimer timer (toolkit::logkit::verbosity () > m_base_verbosity, tl::to_string (tr ("Executing ")) + description (op));
 
   local_processor_contexts<TS, TI, TR> contexts;
   compute_contexts (contexts, op, subject_layer, intruder_layers);
@@ -1361,7 +1361,7 @@ void local_processor<TS, TI, TR>::compute_contexts (local_processor_contexts<TS,
 {
   try {
 
-    tl::SelfTimer timer (tl::verbosity () > m_base_verbosity + 10, tl::to_string (tr ("Computing contexts for ")) + description (op));
+    tl::SelfTimer timer (toolkit::logkit::verbosity () > m_base_verbosity + 10, tl::to_string (tr ("Computing contexts for ")) + description (op));
 
     if (m_nthreads > 0) {
       mp_cc_job.reset (new tl::Job<local_processor_context_computation_worker<TS, TI, TR> > (m_nthreads));
@@ -1418,11 +1418,11 @@ void local_processor<TS, TI, TR>::compute_contexts (local_processor_contexts<TS,
 {
   CRONOLOGY_COLLECTION_BRACKET(event_compute_contexts)
 
-  if (tl::verbosity () >= m_base_verbosity + 20) {
+  if (toolkit::logkit::verbosity () >= m_base_verbosity + 20) {
     if (! subject_parent) {
-      tl::log << tr ("Computing context for top cell ") << mp_subject_layout->cell_name (subject_cell->cell_index ());
+      LOGI << tr ("Computing context for top cell ") << mp_subject_layout->cell_name (subject_cell->cell_index ());
     } else {
-      tl::log << tr ("Computing context for ") << mp_subject_layout->cell_name (subject_parent->cell_index ()) << " -> " << mp_subject_layout->cell_name (subject_cell->cell_index ()) << " @" << subject_cell_inst.to_string ();
+      LOGI << tr ("Computing context for ") << mp_subject_layout->cell_name (subject_parent->cell_index ()) << " -> " << mp_subject_layout->cell_name (subject_cell->cell_index ()) << " @" << subject_cell_inst.to_string ();
     }
   }
 
@@ -1714,7 +1714,7 @@ template <class TS, class TI, class TR>
 void
 local_processor<TS, TI, TR>::compute_results (local_processor_contexts<TS, TI, TR> &contexts, const local_operation<TS, TI, TR> *op, const std::vector<unsigned int> &output_layers) const
 {
-  tl::SelfTimer timer (tl::verbosity () > m_base_verbosity + 10, tl::to_string (tr ("Computing results for ")) + description (op));
+  tl::SelfTimer timer (toolkit::logkit::verbosity () > m_base_verbosity + 10, tl::to_string (tr ("Computing results for ")) + description (op));
 
   //  avoids updates while we work on the layout
   mp_subject_layout->update ();
@@ -1750,7 +1750,7 @@ local_processor<TS, TI, TR>::compute_results (local_processor_contexts<TS, TI, T
     while (true) {
 
       ++iter;
-      tl::SelfTimer timer (tl::verbosity () > m_base_verbosity + 10, tl::sprintf (tl::to_string (tr ("Computing results iteration #%d")), iter));
+      tl::SelfTimer timer (toolkit::logkit::verbosity () > m_base_verbosity + 10, tl::sprintf (tl::to_string (tr ("Computing results iteration #%d")), iter));
 
       bool any = false;
       std::unordered_set<db::cell_index_type> later;

@@ -40,7 +40,7 @@ EmptyWithinViewCache::is_empty_within_view (const geo::Layout *layout, unsigned 
   std::pair<cache_t::iterator, bool> c = m_cache.insert (std::make_pair(std::make_pair(std::make_pair(layout, cell_index), box), std::set<unsigned int> ()));
   if (c.second) {
 
-    tl::SelfTimer timer (tl::verbosity () >= 21, geo::to_string (QObject::tr ("Recomputing layers with shapes in view")));
+    tl::SelfTimer timer (toolkit::logkit::verbosity () >= 21, geo::to_string (QObject::tr ("Recomputing layers with shapes in view")));
 
     const geo::Cell &cell (layout->cell (cell_index));
 
@@ -493,7 +493,7 @@ LayerTreeModel::parent (const QModelIndex &index) const
   } catch (tl::Exception &ex) {
     //  this can happen because some internal indices might not be in place properly - in particular the 
     //  element the mouse was over (hover index)
-    tl::warn << ex.msg ();
+    LOGW << ex.msg ();
     return QModelIndex ();
   }
 }
@@ -898,7 +898,7 @@ LayerTreeModel::index (lay::LayerPropertiesConstIterator iter, int column) const
     return idx;
 
   } catch (tl::Exception &ex) {
-    tl::warn << ex.msg ();
+    LOGW << ex.msg ();
     return QModelIndex ();
   }
 }

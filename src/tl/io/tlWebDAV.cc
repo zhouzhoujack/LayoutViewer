@@ -242,25 +242,25 @@ WebDAVObject::download (const std::string &url, const std::string &target)
 
   try {
 
-    tl::info << tr ("Fetching file structure from ") << url;
+    LOGI << tr ("Fetching file structure from ") << url;
     tl::AbsoluteProgress progress (tl::sprintf (tl::to_string (tr ("Fetching directory structure from %s")), url));
     fetch_download_items (url, target, items, progress);
 
   } catch (tl::Exception &ex) {
-    tl::error << tr ("Error downloading file structure from '") << url << "':" << tl::endl << ex.msg ();
+    LOGE << tr ("Error downloading file structure from '") << url << "':" << toolkit::logkit::endl << ex.msg ();
     return false;
   }
 
   bool has_errors = false;
 
   {
-    tl::info << tl::sprintf (tl::to_string (tr ("Downloading %d file(s) now ..")), items.size ());
+    LOGI << tl::sprintf (tl::to_string (tr ("Downloading %d file(s) now ..")), items.size ());
 
     tl::RelativeProgress progress (tl::sprintf (tl::to_string (tr ("Downloading file(s) from %s")), url), items.size (), 1);
 
     for (std::list<DownloadItem>::const_iterator i = items.begin (); i != items.end (); ++i) {
 
-      tl::info << tl::sprintf (tl::to_string (tr ("Downloading '%s' to '%s' ..")), i->url, i->path);
+      LOGI << tl::sprintf (tl::to_string (tr ("Downloading '%s' to '%s' ..")), i->url, i->path);
 
       try {
 
@@ -269,7 +269,7 @@ WebDAVObject::download (const std::string &url, const std::string &target)
         is->copy_to (os);
 
       } catch (tl::Exception &ex) {
-        tl::error << tr ("Error downloading file from '") << i->url << "':" << tl::endl << ex.msg ();
+        LOGE << tr ("Error downloading file from '") << i->url << "':" << toolkit::logkit::endl << ex.msg ();
         has_errors = true;
       }
 

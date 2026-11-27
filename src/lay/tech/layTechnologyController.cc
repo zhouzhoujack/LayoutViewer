@@ -576,8 +576,8 @@ TechnologyController::rescan (geo::Technologies &technologies)
 
       try {
 
-        if (tl::verbosity () >= 20) {
-          tl::info << "Auto-importing technology from " << geo::to_string (*lf);
+        if (toolkit::logkit::verbosity () >= 20) {
+          LOGI << "Auto-importing technology from " << geo::to_string (*lf);
         }
 
         geo::Technology t;
@@ -588,7 +588,7 @@ TechnologyController::rescan (geo::Technologies &technologies)
         technologies.add (new geo::Technology (t));
 
       } catch (tl::Exception &ex) {
-        tl::warn << geo::to_string (QObject::tr ("Unable to auto-import technology file ")) << geo::to_string (*lf) << ": " << ex.msg ();
+        LOGW << geo::to_string (QObject::tr ("Unable to auto-import technology file ")) << geo::to_string (*lf) << ": " << ex.msg ();
       }
 
     }

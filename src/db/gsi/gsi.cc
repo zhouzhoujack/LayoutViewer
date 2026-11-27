@@ -17,7 +17,7 @@ initialize ()
     return;
   }
 
-  tl::SelfTimer timer (tl::verbosity () >= 21, "Initializing script environment");
+  tl::SelfTimer timer (toolkit::logkit::verbosity () >= 21, "Initializing script environment");
 
   //  Do a first initialization of the new classes because they might add more classes
   for (gsi::ClassBase::class_iterator c = gsi::ClassBase::begin_new_classes (); c != gsi::ClassBase::end_new_classes (); ++c) {

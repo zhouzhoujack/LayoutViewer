@@ -487,7 +487,7 @@ bool SelectionService::mouse_click_event(const geo::DPoint& p, unsigned int butt
         }
         catch (tl::Exception& ex)
         {
-            tl::error << ex.msg();
+            LOGE << ex.msg();
             QMessageBox::critical(0, QObject::tr("Error"), geo::to_qstring(ex.msg()));
             //  clear selection
             mp_view->select(geo::DBox(), lay::Editable::Reset);
@@ -533,7 +533,7 @@ bool SelectionService::mouse_release_event(const geo::DPoint& /*p*/, unsigned in
             }
             catch (tl::Exception& ex)
             {
-                tl::error << ex.msg();
+                LOGE << ex.msg();
                 QMessageBox::critical(0, QObject::tr("Error"), geo::to_qstring(ex.msg()));
                 //  clear selection
                 mp_view->select(geo::DBox(), lay::Editable::Reset);

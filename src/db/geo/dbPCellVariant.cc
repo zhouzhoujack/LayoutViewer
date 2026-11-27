@@ -139,7 +139,7 @@ PCellVariant::update (ImportLayerMapping *layer_mapping)
       header->declaration ()->produce (*layout (), layer_ids, m_parameters, *this);
       m_display_name = header->declaration ()->get_display_name (m_parameters);
     } catch (tl::Exception &ex) {
-      tl::error << ex.msg ();
+      LOGE << ex.msg ();
       if (! layer_ids.empty ()) {
         //  put error messages into layout as text objects
         shapes (layer_ids [0]).insert (db::Text (ex.msg (), db::Trans ()));

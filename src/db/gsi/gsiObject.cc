@@ -33,11 +33,11 @@ Proxy::~Proxy ()
     try {
       prev_obj = set_internal (0, false, false, false);
     } catch (std::exception &ex) {
-      tl::warn << "Caught exception in object destructor: " << ex.what ();
+      LOGW << "Caught exception in object destructor: " << ex.what ();
     } catch (tl::Exception &ex) {
-      tl::warn << "Caught exception in object destructor: " << ex.msg ();
+      LOGW << "Caught exception in object destructor: " << ex.msg ();
     } catch (...) {
-      tl::warn << "Caught unspecified exception in object destructor";
+      LOGW << "Caught unspecified exception in object destructor";
     }
     m_destroyed = true;
   }

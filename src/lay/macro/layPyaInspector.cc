@@ -106,9 +106,9 @@ public:
         check_error ();
       }
     } catch (tl::Exception &ex) {
-      tl::warn << "DictInspector::constructor: " << ex.msg ();
+      LOGW << "DictInspector::constructor: " << ex.msg ();
     } catch (...) {
-      tl::warn << "DictInspector::constructor: unspecific error";
+      LOGW << "DictInspector::constructor: unspecific error";
     }
   }
 
@@ -390,9 +390,9 @@ public:
       try {
         check_error ();
       } catch (tl::Exception &ex) {
-        tl::warn << "ObjectInspector::constructor: " << ex.msg ();
+        LOGW << "ObjectInspector::constructor: " << ex.msg ();
       } catch (...) {
-        tl::warn << "ObjectInspector::constructor: unspecific error";
+        LOGW << "ObjectInspector::constructor: unspecific error";
       }
     }
   }

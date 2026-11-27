@@ -2289,7 +2289,7 @@ static void decompose_convex_helper (int depth, PreferredOrientation po, const d
     //  is convex already
     if (imed == std::numeric_limits<size_t>::max ()) {
       if (! skipped.empty ()) {
-        tl::warn << "sp=" << sp << tl::endl << "po=" << int(po);
+        LOGW << "sp=" << sp << toolkit::logkit::endl << "po=" << int(po);
         tl_assert (false);
       }
       sink.put (sp);

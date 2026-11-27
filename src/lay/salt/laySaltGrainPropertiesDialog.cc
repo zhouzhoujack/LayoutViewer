@@ -499,14 +499,14 @@ SaltGrainPropertiesDialog::accept ()
   //  license
   license_alert->clear ();
   if (m_grain.license ().empty ()) {
-    license_alert->warn () << tr ("License field is empty. Please consider specifying a license model.") << tl::endl
+    license_alert->warn () << tr ("License field is empty. Please consider specifying a license model.") << toolkit::logkit::endl
                            << tr ("A license model tells users whether and how to use the source code of the package.");
   }
 
   //  version
   version_alert->clear ();
   if (m_grain.version ().empty ()) {
-    version_alert->warn () << tr ("Version field is empty. Please consider specifying a version number.") << tl::endl
+    version_alert->warn () << tr ("Version field is empty. Please consider specifying a version number.") << toolkit::logkit::endl
                            << tr ("Versions help the system to apply upgrades if required.");
   } else if (! SaltGrain::valid_version (m_grain.version ())) {
     version_alert->error () << tr ("'%1' is not a valid version string. A version string needs to be numeric (like '1.2.3' or '4.5'').").arg (geo::to_qstring (m_grain.version ()));
@@ -527,8 +527,8 @@ SaltGrainPropertiesDialog::accept ()
         throw tl::Exception (geo::to_string (tr ("Empty document")));
       }
     } catch (tl::Exception &ex) {
-      doc_url_alert->error () << tr ("Attempt to read documentation URL failed. Error details follow.") << tl::endl
-                              << tr ("URL: ") << m_grain.doc_url () << tl::endl
+      doc_url_alert->error () << tr ("Attempt to read documentation URL failed. Error details follow.") << toolkit::logkit::endl
+                              << tr ("URL: ") << m_grain.doc_url () << toolkit::logkit::endl
                               << tr ("Message: ") << ex.msg ();
     }
   }
@@ -540,14 +540,14 @@ SaltGrainPropertiesDialog::accept ()
   for (std::vector<SaltGrainDependency>::const_iterator d = m_grain.dependencies ().begin (); d != m_grain.dependencies ().end (); ++d) {
 
     if (! SaltGrain::valid_name (d->name)) {
-      dependencies_alert->error () << tr ("'%1' is not a valid package name").arg (geo::to_qstring (d->name)) << tl::endl
-                                   << tr ("Valid package names are words (letters, digits, underscores).") << tl::endl
+      dependencies_alert->error () << tr ("'%1' is not a valid package name").arg (geo::to_qstring (d->name)) << toolkit::logkit::endl
+                                   << tr ("Valid package names are words (letters, digits, underscores).") << toolkit::logkit::endl
                                    << tr ("Package groups can be specified in the form 'group/package'.");
       continue;
     }
 
     if (dep_seen.find (d->name) != dep_seen.end ()) {
-      dependencies_alert->error () << tr ("Duplicate dependency '%1'").arg (geo::to_qstring (d->name)) << tl::endl
+      dependencies_alert->error () << tr ("Duplicate dependency '%1'").arg (geo::to_qstring (d->name)) << toolkit::logkit::endl
                                    << tr ("A package cannot be dependent on the same package twice. Remove on entry.");
       continue;
     }
@@ -557,14 +557,14 @@ SaltGrainPropertiesDialog::accept ()
       try {
         dep.check_circular (dep.grain_for_name (m_grain.name ()), dep.grain_for_name (d->name));
       } catch (tl::Exception &ex) {
-        dependencies_alert->error () << ex.msg () << tl::endl
+        dependencies_alert->error () << ex.msg () << toolkit::logkit::endl
                                      << tr ("Circular dependency means, a package is eventually depending on itself.");
       }
     }
 
     if (d->version.empty ()) {
-      dependencies_alert->warn () << tr ("No version specified for dependency '%1'").arg (geo::to_qstring (d->name)) << tl::endl
-                                  << tr ("Please consider giving a version here. Versions help deciding whether a package needs to be updated.") << tl::endl
+      dependencies_alert->warn () << tr ("No version specified for dependency '%1'").arg (geo::to_qstring (d->name)) << toolkit::logkit::endl
+                                  << tr ("Please consider giving a version here. Versions help deciding whether a package needs to be updated.") << toolkit::logkit::endl
                                   << tr ("If the dependency package has a version itself, the version is automatically set to it's current version.");
     }
 
@@ -573,13 +573,13 @@ SaltGrainPropertiesDialog::accept ()
       try {
         gdep = SaltGrain::from_url (d->url);
         if (gdep.name () != d->name) {
-          dependencies_alert->error () << tr ("Package name obtained from download URL is not the expected name.") << tl::endl
-                                       << tr ("Downloaded name: ") << gdep.name () << tl::endl
+          dependencies_alert->error () << tr ("Package name obtained from download URL is not the expected name.") << toolkit::logkit::endl
+                                       << tr ("Downloaded name: ") << gdep.name () << toolkit::logkit::endl
                                        << tr ("Expected name: ") << d->name;
         }
       } catch (tl::Exception &ex) {
-        dependencies_alert->error () << tr ("Attempt to test-download package from URL failed. Error details follow.") << tl::endl
-                                     << tr ("URL: ") << d->url << tl::endl
+        dependencies_alert->error () << tr ("Attempt to test-download package from URL failed. Error details follow.") << toolkit::logkit::endl
+                                     << tr ("URL: ") << d->url << toolkit::logkit::endl
                                      << tr ("Message: ") << ex.msg ();
       }
     }

@@ -805,7 +805,7 @@ DeepLayer DeepShapeStore::create_polygon_layer (const db::RecursiveShapeIterator
   //  Build the working hierarchy from the recursive shape iterator
   try {
 
-    tl::SelfTimer timer (tl::verbosity () >= 41, tl::to_string (tr ("Building working hierarchy")));
+    tl::SelfTimer timer (toolkit::logkit::verbosity () >= 41, tl::to_string (tr ("Building working hierarchy")));
     db::LayoutLocker ll (&layout, true /*no update*/);
 
     builder.set_shape_receiver (&clip);
@@ -833,7 +833,7 @@ DeepLayer DeepShapeStore::create_custom_layer (const db::RecursiveShapeIterator 
   //  Build the working hierarchy from the recursive shape iterator
   try {
 
-    tl::SelfTimer timer (tl::verbosity () >= 41, tl::to_string (tr ("Building working hierarchy")));
+    tl::SelfTimer timer (toolkit::logkit::verbosity () >= 41, tl::to_string (tr ("Building working hierarchy")));
     db::LayoutLocker ll (&layout, true /*no update*/);
 
     builder.set_shape_receiver (pipe);
@@ -858,7 +858,7 @@ DeepLayer DeepShapeStore::create_copy (const DeepLayer &source, HierarchyBuilder
   unsigned int layer_index = ly.insert_layer ();
 
   //  Build the working hierarchy from the recursive shape iterator
-  tl::SelfTimer timer (tl::verbosity () >= 41, tl::to_string (tr ("Building working hierarchy")));
+  tl::SelfTimer timer (toolkit::logkit::verbosity () >= 41, tl::to_string (tr ("Building working hierarchy")));
 
   db::Box region = db::Box::world ();
   db::ICplxTrans trans;

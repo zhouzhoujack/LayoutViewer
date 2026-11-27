@@ -110,8 +110,8 @@ void Macro::save ()
 bool Macro::del ()
 {
   if (m_is_file) {
-    if (tl::verbosity () >= 20) {
-      tl::log << "Deleting macro " << path ();
+    if (toolkit::logkit::verbosity () >= 20) {
+      LOGI << "Deleting macro " << path ();
     }
     QFile f (tl::to_qstring (path ()));
     return f.remove ();
@@ -178,8 +178,8 @@ static tl::XMLStruct<lym::Macro> xml_struct ("klayout-macro",
 
 void Macro::save_to (const std::string &path)
 {
-  if (tl::verbosity () >= 20) {
-    tl::log << "Saving macro to " << path;
+  if (toolkit::logkit::verbosity () >= 20) {
+    LOGI << "Saving macro to " << path;
   }
 
   tl::OutputStream os (path, tl::OutputStream::OM_Plain, true /*as text*/);
@@ -209,8 +209,8 @@ void Macro::load_from (const std::string &fn)
 
     const std::string &path = f.second;
 
-    if (tl::verbosity () >= 20) {
-      tl::log << "Loading macro from " << path;
+    if (toolkit::logkit::verbosity () >= 20) {
+      LOGI << "Loading macro from " << path;
     }
 
     m_autorun = m_autorun_default;
@@ -245,8 +245,8 @@ void Macro::load_from_string (const std::string &text, const std::string &url)
 {
   m_format = NoFormat;
 
-  if (tl::verbosity () >= 20) {
-    tl::log << "Loading macro from " << url;
+  if (toolkit::logkit::verbosity () >= 20) {
+    LOGI << "Loading macro from " << url;
   }
 
   if (format_from_suffix (tl::to_string (QUrl (tl::to_qstring (url)).path ()), m_interpreter, m_dsl_interpreter, m_autorun_default, m_format)) {
@@ -435,8 +435,8 @@ bool Macro::rename (const std::string &n)
 {
   if (m_is_file && parent ()) {
     std::string suffix = suffix_for_format (m_interpreter, m_dsl_interpreter, m_format);
-    if (tl::verbosity () >= 20) {
-      tl::log << "Renaming macro " << path () << " to " << n;
+    if (toolkit::logkit::verbosity () >= 20) {
+      LOGI << "Renaming macro " << path () << " to " << n;
     }
     QFile f (tl::to_qstring (path ()));
     if (! f.rename (QFileInfo (QDir (tl::to_qstring (parent ()->path ())), tl::to_qstring (n + suffix)).filePath ())) {
@@ -904,7 +904,7 @@ void Macro::install_doc () const
         --i;
 
         if (cls) {
-          tl::error << tl::to_string (QObject::tr ("Reading class doc from ")) << path () << ": " << tl::to_string (QObject::tr ("Duplicate @class"));
+          LOGE << tl::to_string (QObject::tr ("Reading class doc from ")) << path () << ": " << tl::to_string (QObject::tr ("Duplicate @class"));
           return;
         }
 
@@ -926,7 +926,7 @@ void Macro::install_doc () const
             }
           }
           if (! super_cls) {
-            tl::error << tl::to_string (QObject::tr ("Reading class doc from ")) << path () << ": " << tl::to_string (QObject::tr ("Cannot find super class: ")) << super_cls_name;
+            LOGE << tl::to_string (QObject::tr ("Reading class doc from ")) << path () << ": " << tl::to_string (QObject::tr ("Cannot find super class: ")) << super_cls_name;
             return;
           }
         }
@@ -942,7 +942,7 @@ void Macro::install_doc () const
       } else if (ex.test ("@method") || (st = ex.test ("@static_method")) == true) {
 
         if (cls == 0) {
-          tl::error << tl::to_string (QObject::tr ("Reading class doc from ")) << path () << ": " << tl::to_string (QObject::tr ("@method without preceding @class"));
+          LOGE << tl::to_string (QObject::tr ("Reading class doc from ")) << path () << ": " << tl::to_string (QObject::tr ("@method without preceding @class"));
         } else {
 
           std::string n;
@@ -1001,8 +1001,8 @@ bool Macro::can_run () const
 
 int Macro::run () const
 {
-  if (tl::verbosity () >= 20) {
-    tl::log << tl::to_string (tr ("Running macro ")) << path ();
+  if (toolkit::logkit::verbosity () >= 20) {
+    LOGI << tl::to_string (tr ("Running macro ")) << path ();
   }
 
   try {
@@ -1236,19 +1236,19 @@ MacroCollection::add_folder (const std::string &description, const std::string &
       //  Try to create the folder since it does not exist yet or skip that one
       if (! force_create) {
 
-        if (tl::verbosity () >= 20) {
-          tl::log << "Folder does not exist - skipping: " << path;
+        if (toolkit::logkit::verbosity () >= 20) {
+          LOGI << "Folder does not exist - skipping: " << path;
         }
         return 0;
 
       } else {
 
-        if (tl::verbosity () >= 20) {
-          tl::log << "Folder does not exist yet - trying to create it: " << path;
+        if (toolkit::logkit::verbosity () >= 20) {
+          LOGI << "Folder does not exist yet - trying to create it: " << path;
         }
         if (! QDir::root ().mkpath (file_info.absoluteFilePath ())) {
-          if (tl::verbosity () >= 10) {
-            tl::error << "Unable to create folder path: " << path;
+          if (toolkit::logkit::verbosity () >= 10) {
+            LOGE << "Unable to create folder path: " << path;
           }
           return 0;
         }
@@ -1259,8 +1259,8 @@ MacroCollection::add_folder (const std::string &description, const std::string &
     }
 
     if (! file_info.isDir ()) {
-      if (tl::verbosity () >= 10) {
-        tl::error << "Folder is not a directory: " << path;
+      if (toolkit::logkit::verbosity () >= 10) {
+        LOGE << "Folder is not a directory: " << path;
       }
       return 0;
     }
@@ -1279,8 +1279,8 @@ MacroCollection::add_folder (const std::string &description, const std::string &
 
     if (! readonly && ! file_info.isWritable ()) {
       readonly = true;
-      if (tl::verbosity () >= 20) {
-        tl::log << "Folder is read-only: " << path;
+      if (toolkit::logkit::verbosity () >= 20) {
+        LOGI << "Folder is read-only: " << path;
       }
     }
 
@@ -1326,8 +1326,8 @@ namespace {
 
 void MacroCollection::scan (const std::string &path)
 {
-  if (tl::verbosity () >= 20) {
-    tl::info << "Scanning macro path " << path << " (readonly=" << m_readonly << ")";
+  if (toolkit::logkit::verbosity () >= 20) {
+    LOGI << "Scanning macro path " << path << " (readonly=" << m_readonly << ")";
   }
 
   if (! path.empty () && path[0] == ':') {
@@ -1388,7 +1388,7 @@ void MacroCollection::scan (const std::string &path)
           }
 
         } catch (tl::Exception &ex) {
-          tl::error << "Reading " << url << ": " << ex.msg ();
+          LOGE << "Reading " << url << ": " << ex.msg ();
         }
 
       }
@@ -1462,7 +1462,7 @@ void MacroCollection::scan (const std::string &path)
         }
 
       } catch (tl::Exception &ex) {
-        tl::error << "Reading " << tl::to_string (*f) << " in " << path << ": " << ex.msg ();
+        LOGE << "Reading " << tl::to_string (*f) << " in " << path << ": " << ex.msg ();
       }
 
     }
@@ -1485,7 +1485,7 @@ void MacroCollection::scan (const std::string &path)
         }
 
       } catch (tl::Exception &ex) {
-        tl::error << ex.msg ();
+        LOGE << ex.msg ();
       }
 
     }
@@ -1550,7 +1550,7 @@ void MacroCollection::save ()
       try {
         m->second->save ();
       } catch (tl::Exception &ex) {
-        tl::error << ex.msg ();
+        LOGE << ex.msg ();
       }
     }
   }
@@ -1558,8 +1558,8 @@ void MacroCollection::save ()
 
 bool MacroCollection::rename (const std::string &n)
 {
-  if (tl::verbosity () >= 20) {
-    tl::info << "Renaming macro folder " << path () << " to " << n;
+  if (toolkit::logkit::verbosity () >= 20) {
+    LOGI << "Renaming macro folder " << path () << " to " << n;
   }
   QFile f (tl::to_qstring (path ()));
   begin_changes ();
@@ -1687,8 +1687,8 @@ bool MacroCollection::add (lym::Macro *m)
 
 bool MacroCollection::del ()
 {
-  if (tl::verbosity () >= 20) {
-    tl::info << "Deleting macro folder " << path ();
+  if (toolkit::logkit::verbosity () >= 20) {
+    LOGI << "Deleting macro folder " << path ();
   }
   return QDir ().rmdir (tl::to_qstring (path ()));
 }

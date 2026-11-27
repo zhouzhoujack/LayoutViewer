@@ -205,8 +205,8 @@ SaltDownloadManager::compute_list (const lay::Salt &salt, const lay::Salt &salt_
           if (SaltGrain::compare_versions (pd.version, d->version) < 0) {
 
             //  Grain is present, but too old -> update version and reload in the next iteration
-            if (tl::verbosity() >= 20) {
-              tl::log << "Upgrading installation request as required by package " << p.name << ": " << d->name << " (" << d->version << ") with URL " << d->url;
+            if (toolkit::logkit::verbosity() >= 20) {
+              LOGI << "Upgrading installation request as required by package " << p.name << ": " << d->name << " (" << d->version << ") with URL " << d->url;
             }
 
             pd.downloaded = false;
@@ -223,21 +223,21 @@ SaltDownloadManager::compute_list (const lay::Salt &salt, const lay::Salt &salt_
             //  Grain is installed already, but too old -> register for update
             if (SaltGrain::compare_versions (g->version (), d->version) < 0) {
 
-              if (tl::verbosity() >= 20) {
-                tl::log << "Considering for update as dependency: " << d->name << " (" << d->version << ") with URL " << d->url;
+              if (toolkit::logkit::verbosity() >= 20) {
+                LOGI << "Considering for update as dependency: " << d->name << " (" << d->version << ") with URL " << d->url;
               }
               m_registry.push_back (Descriptor (d->name, std::string (), d->url, d->version));
 
             } else {
-              if (tl::verbosity() >= 20) {
-                tl::log << "Dependency already satisfied: " << d->name << "(" << d->version << ")";
+              if (toolkit::logkit::verbosity() >= 20) {
+                LOGI << "Dependency already satisfied: " << d->name << "(" << d->version << ")";
               }
             }
 
           } else {
 
-            if (tl::verbosity() >= 20) {
-              tl::log << "Considering for download as dependency: " << d->name << " (" << d->version << ") with URL " << d->url;
+            if (toolkit::logkit::verbosity() >= 20) {
+              LOGI << "Considering for download as dependency: " << d->name << " (" << d->version << ") with URL " << d->url;
             }
             m_registry.push_back (Descriptor (d->name, std::string (), d->url, d->version));
 
@@ -301,8 +301,8 @@ SaltDownloadManager::fetch_missing (const lay::Salt &salt, const lay::Salt &salt
           }
         } else {
           if (p->url.empty ()) {
-            if (tl::verbosity() >= 20) {
-              tl::log << "Resolved package URL for package " << p->name << ": " << g->url ();
+            if (toolkit::logkit::verbosity() >= 20) {
+              LOGI << "Resolved package URL for package " << p->name << ": " << g->url ();
             }
             p->url = g->url ();
           }
@@ -342,12 +342,12 @@ SaltDownloadManager::fetch_missing (const lay::Salt &salt, const lay::Salt &salt
     const SaltGrain *g = salt.grain_by_name (p->name);
     if (g) {
       if (SaltGrain::compare_versions (p->version, g->version ()) <= 0 && p->url == g->url ()) {
-        if (tl::verbosity() >= 20) {
-          tl::log << "Package already present with sufficient version - not installed again: " << p->name << " (" << p->version << ")";
+        if (toolkit::logkit::verbosity() >= 20) {
+          LOGI << "Package already present with sufficient version - not installed again: " << p->name << " (" << p->version << ")";
         }
       } else {
-        if (tl::verbosity() >= 20) {
-          tl::log << "Considering package for upgrade or URL switch: " << p->name << ", from " << g->url () << "(" << g->version () << ") to " << p->url << "(" << p->version << ")";
+        if (toolkit::logkit::verbosity() >= 20) {
+          LOGI << "Considering package for upgrade or URL switch: " << p->name << ", from " << g->url () << "(" << g->version () << ") to " << p->url << "(" << p->version << ")";
         }
         m_registry.push_back (*p);
       }
@@ -481,7 +481,7 @@ SaltDownloadManager::execute (lay::SaltManagerDialog *parent, lay::Salt &salt)
           }
         }
       } catch (tl::Exception &ex) {
-        tl::error << ex.msg ();
+        LOGE << ex.msg ();
       }
 
       dialog->separator ();
@@ -505,10 +505,10 @@ SaltDownloadManager::execute (lay::SaltManagerDialog *parent, lay::Salt &salt)
       }
 
       if (! salt.create_grain (p->grain, target)) {
-        tl::error << geo::to_string (QObject::tr ("Installation failed for package %1").arg (geo::to_qstring (target.name ())));
+        LOGE << geo::to_string (QObject::tr ("Installation failed for package %1").arg (geo::to_qstring (target.name ())));
         result = false;
       } else {
-        tl::log << geo::to_string (QObject::tr ("Package %1 installed successfully").arg (geo::to_qstring (target.name ())));
+        LOGI << geo::to_string (QObject::tr ("Package %1 installed successfully").arg (geo::to_qstring (target.name ())));
       }
 
     }

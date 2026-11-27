@@ -69,7 +69,7 @@ static PluginDescriptor do_load_plugin (const std::string &pp)
     }
   }
 
-  tl::log << "Loaded plugin '" << pp << "'";
+  LOGI << "Loaded plugin '" << pp << "'";
 
   return desc;
 }
@@ -91,7 +91,7 @@ void init (const std::vector<std::string> &_paths)
 
   if (paths.empty ()) {
     //  nothing to do
-    tl::log << geo::to_string (tr ("No lay_plugins loaded - no path given"));
+    LOGI << geo::to_string (tr ("No lay_plugins loaded - no path given"));
     return;
   }
 
@@ -103,8 +103,8 @@ void init (const std::vector<std::string> &_paths)
     const char *lay_plugin_dir = "lay_plugins";
     std::string pp = tl::combine_path (*p, lay_plugin_dir);
 
-    if (tl::verbosity () >= 20) {
-      tl::info << "Scanning for lay plugins: " << pp;
+    if (toolkit::logkit::verbosity () >= 20) {
+      LOGI << "Scanning for lay plugins: " << pp;
     }
 
     std::vector<std::string> ee = tl::dir_entries (pp, true, false);
@@ -136,7 +136,7 @@ void init (const std::vector<std::string> &_paths)
           s_plugins.push_back (do_load_plugin (imp));
           modules.insert (*im);
         } catch (tl::Exception (&ex)) {
-          tl::error << ex.msg ();
+          LOGE << ex.msg ();
         }
       }
 

@@ -1603,7 +1603,7 @@ PartialService::mouse_press_event (const geo::DPoint &p, unsigned int buttons, b
       try {
         partial_select (geo::DBox (p, p), lay::Editable::Replace);
       } catch (tl::Exception &ex) {
-        tl::error << ex.msg ();
+        LOGE << ex.msg ();
         QMessageBox::critical (0, QObject::tr ("Error"), geo::to_qstring (ex.msg ()));
         //  clear selection
         partial_select (geo::DBox (), lay::Editable::Reset);
@@ -1843,7 +1843,7 @@ PartialService::mouse_click_event (const geo::DPoint &p, unsigned int buttons, b
       selection_to_view ();
 
     } catch (tl::Exception &ex) {
-      tl::error << ex.msg ();
+      LOGE << ex.msg ();
       QMessageBox::critical (0, QObject::tr ("Error"), geo::to_qstring (ex.msg ()));
       //  clear selection
       partial_select (geo::DBox (), lay::Editable::Reset);
@@ -1999,7 +1999,7 @@ PartialService::mouse_release_event (const geo::DPoint &p, unsigned int buttons,
       try {
         partial_select (geo::DBox (m_p1, m_p2), mode);
       } catch (tl::Exception &ex) {
-        tl::error << ex.msg ();
+        LOGE << ex.msg ();
         QMessageBox::critical (0, QObject::tr ("Error"), geo::to_qstring (ex.msg ()));
         //  clear selection
         partial_select (geo::DBox (), lay::Editable::Reset);

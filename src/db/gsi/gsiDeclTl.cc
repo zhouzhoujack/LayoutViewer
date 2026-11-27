@@ -21,39 +21,39 @@ namespace gsi
 class Logger
 {
 public:
-  static void out (tl::Channel *channel, const char *msg)
+  static void out (toolkit::logkit::Channel *channel, const char *msg)
   {
     *channel << msg;
   }
 
   static void info (const char *msg)
   {
-    out (&tl::info, msg);
+    out (&toolkit::logkit::info, msg);
   }
 
   static void log (const char *msg)
   {
-    out (&tl::log, msg);
+    out (&toolkit::logkit::log, msg);
   }
 
   static void warn (const char *msg)
   {
-    out (&tl::warn, msg);
+    out (&toolkit::logkit::warn, msg);
   }
 
   static void error (const char *msg)
   {
-    out (&tl::error, msg);
+    out (&toolkit::logkit::error, msg);
   }
 
   static int verbosity () 
   {
-    return tl::verbosity ();
+    return toolkit::logkit::verbosity ();
   }
 
   static void set_verbosity (int v)
   {
-    tl::verbosity (v);
+    toolkit::logkit::verbosity (v);
   }
 };
 

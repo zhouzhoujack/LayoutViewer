@@ -83,7 +83,7 @@ Reader::~Reader ()
 const db::LayerMap &
 Reader::read (db::Layout &layout, const db::LoadLayoutOptions &options)
 {
-  tl::SelfTimer timer (tl::verbosity () >= 21, tl::to_string (tr ("Reading file: ")) + m_stream.source ());
+  tl::SelfTimer timer (toolkit::logkit::verbosity () >= 21, tl::to_string (tr ("Reading file: ")) + m_stream.source ());
 
   return mp_actual_reader->read (layout, options);
 }
@@ -91,7 +91,7 @@ Reader::read (db::Layout &layout, const db::LoadLayoutOptions &options)
 const db::LayerMap &
 Reader::read (db::Layout &layout)
 {
-  tl::SelfTimer timer (tl::verbosity () >= 21, tl::to_string (tr ("Reading file: ")) + m_stream.source ());
+  tl::SelfTimer timer (toolkit::logkit::verbosity () >= 21, tl::to_string (tr ("Reading file: ")) + m_stream.source ());
 
   return mp_actual_reader->read (layout);
 }

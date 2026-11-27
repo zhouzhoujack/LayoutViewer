@@ -116,7 +116,7 @@ LayoutToNetlistStandardReader::skip ()
 
 void LayoutToNetlistStandardReader::do_read (db::LayoutToNetlist *l2n)
 {
-  tl::SelfTimer timer (tl::verbosity () >= 21, tl::to_string (tr ("File read: ")) + m_path);
+  tl::SelfTimer timer (toolkit::logkit::verbosity () >= 21, tl::to_string (tr ("File read: ")) + m_path);
 
   try {
     read_netlist (0, l2n);

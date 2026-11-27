@@ -107,7 +107,7 @@ public:
    *  @brief Instantiate the timer and start if the first parameter is true
    *
    *  This constructor is useful in conjunction with the verbosity level: 
-   *  SelfTimer (tl::verbosity () >= 30, ...).
+   *  SelfTimer (toolkit::logkit::verbosity () >= 30, ...).
    */
   SelfTimer (bool enabled, const std::string &desc) : Timer (), m_desc (desc)
   {

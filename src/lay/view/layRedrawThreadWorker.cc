@@ -365,10 +365,10 @@ RedrawThreadWorker::perform_task (tl::Task *task)
 
           m_layer = li.layer_index;
        
-          if (tl::verbosity () >= 40) {
-            tl::info << geo::to_string (QObject::tr ("Drawing layer: ")) << mp_layout->get_properties (m_layer).name;
+          if (toolkit::logkit::verbosity () >= 40) {
+            LOGI << geo::to_string (QObject::tr ("Drawing layer: ")) << mp_layout->get_properties (m_layer).name;
           }
-          tl::SelfTimer timer (tl::verbosity () >= 41, geo::to_string (QObject::tr ("Drawing layer")));
+          tl::SelfTimer timer (toolkit::logkit::verbosity () >= 41, geo::to_string (QObject::tr ("Drawing layer")));
 
           //  configure renderer ..
           mp_renderer->set_xfill (m_xfill);
@@ -391,10 +391,10 @@ RedrawThreadWorker::perform_task (tl::Task *task)
           mp_renderer->set_xfill (false);
 
           //  if no specific layer is assigned, draw cell boxes with the style given
-          if (tl::verbosity () >= 40) {
-            tl::info << geo::to_string (QObject::tr ("Drawing custom frames"));
+          if (toolkit::logkit::verbosity () >= 40) {
+            LOGI << geo::to_string (QObject::tr ("Drawing custom frames"));
           }
-          tl::SelfTimer timer (tl::verbosity () >= 41, geo::to_string (QObject::tr ("Drawing frames")));
+          tl::SelfTimer timer (toolkit::logkit::verbosity () >= 41, geo::to_string (QObject::tr ("Drawing frames")));
 
           for (std::set< std::pair<geo::DCplxTrans, int> >::const_iterator b = m_box_variants.begin (); b != m_box_variants.end (); ++b) {
             if (b->second == li.cellview_index) {
@@ -416,10 +416,10 @@ RedrawThreadWorker::perform_task (tl::Task *task)
   } else if (task_id == draw_boxes_queue_entry) {
 
     //  draw the bounding boxes
-    if (tl::verbosity () >= 40) {
-      tl::info << geo::to_string (QObject::tr ("Drawing frames and guiding shapes"));
+    if (toolkit::logkit::verbosity () >= 40) {
+      LOGI << geo::to_string (QObject::tr ("Drawing frames and guiding shapes"));
     }
-    tl::SelfTimer timer (tl::verbosity () >= 41, geo::to_string (QObject::tr ("Drawing frames and guiding shapes")));
+    tl::SelfTimer timer (toolkit::logkit::verbosity () >= 41, geo::to_string (QObject::tr ("Drawing frames and guiding shapes")));
 
     //  No xfill for cell boxes
     mp_renderer->set_xfill (false);
@@ -572,10 +572,10 @@ RedrawThreadWorker::perform_task (tl::Task *task)
   } else if (task_id == draw_custom_queue_entry) {
 
     //  draw the decorations
-    if (tl::verbosity () >= 40) {
-      tl::info << geo::to_string (QObject::tr ("Drawing decorations"));
+    if (toolkit::logkit::verbosity () >= 40) {
+      LOGI << geo::to_string (QObject::tr ("Drawing decorations"));
     }
-    tl::SelfTimer timer (tl::verbosity () >= 41, geo::to_string (QObject::tr ("Drawing decorations")));
+    tl::SelfTimer timer (toolkit::logkit::verbosity () >= 41, geo::to_string (QObject::tr ("Drawing decorations")));
 
     m_buffers.clear ();
     mp_canvas->initialize_plane (m_planes[0], m_nlayers * planes_per_layer + special_planes_before); 
@@ -625,9 +625,9 @@ RedrawThreadWorker::perform_task (tl::Task *task)
   transfer ();
   m_buffers.clear ();
 
-  if (tl::verbosity () >= 30) {
+  if (toolkit::logkit::verbosity () >= 30) {
     for (cell_cache_t::iterator cc = m_cell_cache.begin(); cc != m_cell_cache.end (); ++cc) {
-      tl::info << "Cell cache: " << mp_layout->cell_name(cc->first.ci) << " (" << cc->first.nlevels << ":" << cc->first.trans.to_string() << ") " 
+      LOGI << "Cell cache: " << mp_layout->cell_name(cc->first.ci) << " (" << cc->first.nlevels << ":" << cc->first.trans.to_string() << ") " 
                << cc->second.fill->width() << " x " << cc->second.fill->height() << " -> " << cc->second.hits << " hits";
     }
   }
@@ -2089,8 +2089,8 @@ RedrawThreadWorker::iterate_variants (const std::vector <geo::Box> &redraw_regio
     iterate_variants_rec (redraw_regions, ci, trans, 0, what, false);
     m_from_level = fl;
 
-    if (tl::verbosity () >= 40) {
-      tl::info << geo::to_string (QObject::tr ("Cell variant cache hits/misses: ")) << m_cache_hits << "/" << m_cache_misses;
+    if (toolkit::logkit::verbosity () >= 40) {
+      LOGI << geo::to_string (QObject::tr ("Cell variant cache hits/misses: ")) << m_cache_hits << "/" << m_cache_misses;
     }
 
   } else {

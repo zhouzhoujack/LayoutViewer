@@ -43,9 +43,9 @@ Executable::do_cleanup ()
   try {
     cleanup ();
   } catch (tl::Exception &ex) {
-    tl::error << ex.msg ();
+    LOGE << ex.msg ();
   } catch (std::runtime_error &ex) {
-    tl::error << ex.what ();
+    LOGE << ex.what ();
   } catch (...) {
     //  ignore exceptions here
   }

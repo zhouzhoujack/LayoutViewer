@@ -244,7 +244,7 @@ Timer::memory_size ()
 void
 SelfTimer::start_report () const
 {
-  tl::info << m_desc << ": " << tl::to_string (tr ("started"));
+  LOGI << m_desc << ": " << tl::to_string (tr ("started"));
 }
 
 void
@@ -252,14 +252,14 @@ SelfTimer::report () const
 {
   size_t memsize = memory_size ();
 
-  tl::info << m_desc << ": " << sec_user () << " (user) "
+  LOGI << m_desc << ": " << sec_user () << " (user) "
            << sec_sys () << " (sys) "
-           << sec_wall () << " (wall)" << tl::noendl;
+           << sec_wall () << " (wall)" << toolkit::logkit::noendl;
 
   if (memsize > 0) {
-    tl::info << " " << tl::sprintf ("%.2fM", double (memsize) / (1024.0 * 1024.0)) << " (mem)";
+    LOGI << " " << tl::sprintf ("%.2fM", double (memsize) / (1024.0 * 1024.0)) << " (mem)";
   } else {
-    tl::info << "";
+    LOGI << "";
   }
 }
 

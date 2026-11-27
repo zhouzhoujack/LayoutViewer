@@ -29,7 +29,7 @@ LogReceiver::LogReceiver (LogFile *file, int verbosity, void (LogFile::*method)(
 void 
 LogReceiver::puts (const char *s) 
 { 
-  if (tl::verbosity () >= m_verbosity) {
+  if (toolkit::logkit::verbosity () >= m_verbosity) {
 
     while (*s) {
 
@@ -58,7 +58,7 @@ LogReceiver::puts (const char *s)
 void 
 LogReceiver::endl () 
 { 
-  if (tl::verbosity () >= m_verbosity) {
+  if (toolkit::logkit::verbosity () >= m_verbosity) {
     QMutexLocker locker (&m_lock);
     (mp_file->*m_method) (m_text, false);
     m_text.clear ();
@@ -104,10 +104,10 @@ LogFile::LogFile (size_t max_entries, bool register_global)
   m_timer.setInterval (0);
 
   if (register_global) {
-    tl::info.add (&m_info_receiver, false);
-    tl::log.add (&m_log_receiver, false);
-    tl::error.add (&m_error_receiver, false);
-    tl::warn.add (&m_warn_receiver, false);
+    toolkit::logkit::info.add (&m_info_receiver, false);
+    toolkit::logkit::log.add (&m_log_receiver, false);
+    toolkit::logkit::error.add (&m_error_receiver, false);
+    toolkit::logkit::warn.add (&m_warn_receiver, false);
   }
 }
 
@@ -319,7 +319,7 @@ LogViewerDialog::LogViewerDialog (QWidget *parent, bool register_global, bool in
     verbosity_cbx->hide ();
     verbosity_label->hide ();
   } else {
-    verbosity_cbx->setCurrentIndex (std::min (4, tl::verbosity () / 10));
+    verbosity_cbx->setCurrentIndex (std::min (4, toolkit::logkit::verbosity () / 10));
     connect (verbosity_cbx, SIGNAL (currentIndexChanged (int)), this, SLOT (verbosity_changed (int)));
   }
 
@@ -343,7 +343,7 @@ LogViewerDialog::LogViewerDialog (QWidget *parent, bool register_global, bool in
 void
 LogViewerDialog::verbosity_changed (int index)
 {
-  tl::verbosity (index * 10 + 1);
+  toolkit::logkit::verbosity (index * 10 + 1);
 }
 
 // -----------------------------------------------------------------

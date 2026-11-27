@@ -36,7 +36,7 @@ Writer::~Writer ()
 void 
 Writer::write (db::Layout &layout, tl::OutputStream &stream)
 {
-  tl::SelfTimer timer (tl::verbosity () >= 21, tl::to_string (tr ("Writing file: ")) + stream.path ());
+  tl::SelfTimer timer (toolkit::logkit::verbosity () >= 21, tl::to_string (tr ("Writing file: ")) + stream.path ());
 
   tl_assert (mp_writer != 0);
   mp_writer->write (layout, stream, m_options);

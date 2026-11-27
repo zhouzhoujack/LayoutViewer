@@ -104,17 +104,17 @@ static void ui_exception_handler_tl (const tl::Exception &ex, QWidget *parent)
     }
 
     if (gsi_excpt->line () > 0) {
-      tl::error << gsi_excpt->sourcefile () << ":" << gsi_excpt->line () << ": " 
+      LOGE << gsi_excpt->sourcefile () << ":" << gsi_excpt->line () << ": " 
                 << gsi_excpt->msg () << geo::to_string (QObject::tr (" (class ")) << gsi_excpt->cls () << ")";
     } else {
-      tl::error << gsi_excpt->msg () << geo::to_string (QObject::tr (" (class ")) << gsi_excpt->cls () << ")";
+      LOGE << gsi_excpt->msg () << geo::to_string (QObject::tr (" (class ")) << gsi_excpt->cls () << ")";
     }
 
     lay::RuntimeErrorForm error_dialog (parent, "ruby_error_form", gsi_excpt);
     error_dialog.exec ();
 
   } else {
-    tl::error << ex.msg (); 
+    LOGE << ex.msg (); 
     if (! parent) {
       parent = QApplication::activeWindow () ? QApplication::activeWindow () : lay::MainWindow::instance ();
     }
@@ -133,7 +133,7 @@ static void ui_exception_handler_std (const std::exception &ex, QWidget *parent)
     lay::MainWindow::instance ()->manager ().commit ();
   }
 
-  tl::error << ex.what (); 
+  LOGE << ex.what (); 
   if (! parent) {
     parent = QApplication::activeWindow () ? QApplication::activeWindow () : lay::MainWindow::instance ();
   }
@@ -287,7 +287,7 @@ ApplicationBase::parse_cmd (int &argc, char **argv)
       if (v < 0) {
         v = 0;
       }
-      tl::verbosity (v);
+      toolkit::logkit::verbosity (v);
 
     } else if (a == "-l" && (i + 1) < argc) {
 
@@ -650,8 +650,8 @@ ApplicationBase::init_app ()
 
       if (f->first == layout_file_with_tech_file) {
 
-        if (tl::verbosity () >= 20) {
-          tl::info << "Importing technology from " << f->second.second;
+        if (toolkit::logkit::verbosity () >= 20) {
+          LOGI << "Importing technology from " << f->second.second;
         }
 
         geo::Technology t;
@@ -738,13 +738,13 @@ ApplicationBase::init_app ()
   setup ();
 
   //  initialize the plugins for the first time
-  if (tl::verbosity () >= 20) {
-    tl::info << "Initializing plugins:";
+  if (toolkit::logkit::verbosity () >= 20) {
+    LOGI << "Initializing plugins:";
   }
   for (tl::Registrar<lay::PluginDeclaration>::iterator cls = tl::Registrar<lay::PluginDeclaration>::begin (); cls != tl::Registrar<lay::PluginDeclaration>::end (); ++cls) {
     lay::PluginDeclaration *pd = const_cast<lay::PluginDeclaration *> (&*cls);
-    if (tl::verbosity () >= 20) {
-      tl::info << "  " << cls.current_name () << " [" << cls.current_position () << "]";
+    if (toolkit::logkit::verbosity () >= 20) {
+      LOGI << "  " << cls.current_name () << " [" << cls.current_position () << "]";
     }
     pd->initialize (dispatcher ());
   }
@@ -756,16 +756,16 @@ ApplicationBase::init_app ()
   process_events ();
 
   //  some info output
-  if (tl::verbosity () >= 20) {
+  if (toolkit::logkit::verbosity () >= 20) {
 
-    tl::info << "KLayout path:";
+    LOGI << "KLayout path:";
     for (std::vector <std::string>::const_iterator c = m_klayout_path.begin (); c != m_klayout_path.end (); ++c) {
-      tl::info << "  " << *c;
+      LOGI << "  " << *c;
     }
-    tl::info << "Config file to write: " << m_config_file_to_write;
-    tl::info << "Config files to read:";
+    LOGI << "Config file to write: " << m_config_file_to_write;
+    LOGI << "Config files to read:";
     for (std::vector <std::string>::const_iterator c = m_config_files.begin (); c != m_config_files.end (); ++c) {
-      tl::info << "  " << *c;
+      LOGI << "  " << *c;
     }
 
   }
@@ -819,7 +819,7 @@ ApplicationBase::scan_global_modules ()
       if (rbm_file.exists () && rbm_file.isReadable ()) {
         std::string m = geo::to_string (rbm_file.absoluteFilePath ());
         if (modules.find (m) == modules.end ()) {
-          tl::warn << geo::to_string (QObject::tr ("Global modules are deprecated. Turn '%1' into an autorun macro instead and put it into 'macros' or 'pymacros'.").arg (geo::to_qstring (m)));
+          LOGW << geo::to_string (QObject::tr ("Global modules are deprecated. Turn '%1' into an autorun macro instead and put it into 'macros' or 'pymacros'.").arg (geo::to_qstring (m)));
           global_modules.push_back (m);
           modules.insert (m);
         }
@@ -855,14 +855,14 @@ ApplicationBase::finish ()
   if (dispatcher () && m_write_config_file) {
 
     if (! m_config_file_to_write.empty ()) {
-      if (tl::verbosity () >= 20) {
-        tl::info << geo::to_string (QObject::tr ("Updating configuration file ")) << m_config_file_to_write;
+      if (toolkit::logkit::verbosity () >= 20) {
+        LOGI << geo::to_string (QObject::tr ("Updating configuration file ")) << m_config_file_to_write;
       }
       dispatcher ()->write_config (m_config_file_to_write);
     }
     if (! m_config_file_to_delete.empty () && m_config_file_to_delete != m_config_file_to_write) {
-      if (tl::verbosity () >= 20) {
-        tl::info << geo::to_string (QObject::tr ("Deleting configuration file ")) << m_config_file_to_delete;
+      if (toolkit::logkit::verbosity () >= 20) {
+        LOGI << geo::to_string (QObject::tr ("Deleting configuration file ")) << m_config_file_to_delete;
       }
       QFile::remove (geo::to_qstring (m_config_file_to_delete));
     }
@@ -1002,7 +1002,7 @@ ApplicationBase::run ()
   for (std::vector< std::pair<std::string, std::string> >::const_iterator v = m_variables.begin (); v != m_variables.end (); ++v) {
     ruby_interpreter ().define_variable (v->first, v->second);
     python_interpreter ().define_variable (v->first, v->second);
-    tl::log << "Variable definition: " << v->first << "='" << v->second << "'";
+    LOGI << "Variable definition: " << v->first << "='" << v->second << "'";
   }
 
   for (std::vector<std::string>::const_iterator m = m_load_macros.begin (); m != m_load_macros.end (); ++m) {
@@ -1016,12 +1016,12 @@ ApplicationBase::run ()
         //  menu-based macros are just registered so they are shown in the menu
         lay::MacroController *mc = lay::MacroController::instance ();
         if (mc) {
-          tl::log << "Registering macro '" << *m << "'";
+          LOGI << "Registering macro '" << *m << "'";
           mc->add_temp_macro (macro.release ());
         }
       } else {
         //  other macros given with -rm are run
-        tl::log << "Run macro '" << *m << "'";
+        LOGI << "Run macro '" << *m << "'";
         macro->run ();
       }
 
@@ -1088,7 +1088,7 @@ ApplicationBase::run ()
         mw->load_layer_properties (m_layer_props_file, true /*all views*/, m_lyp_add_default);
       }
 
-      tl::log << "Layer properties loaded '" << m_layer_props_file << "'";
+      LOGI << "Layer properties loaded '" << m_layer_props_file << "'";
 
       //  because the layer may carry transformations, we need to refit the cellviews.
       for (unsigned int v = 0; v != mw->views (); ++v) {
@@ -1099,7 +1099,7 @@ ApplicationBase::run ()
 
     if (! m_session_file.empty ()) {
       mw->restore_session (m_session_file);
-      tl::log << "Session restored '" << m_session_file << "'";
+      LOGI << "Session restored '" << m_session_file << "'";
     }
 
     if (! m_gtf_replay.empty ()) {
@@ -1129,7 +1129,7 @@ ApplicationBase::run ()
 
   if (! m_run_macro.empty ()) {
 
-    tl::log << "Run macro '" << m_run_macro << "'";
+    LOGI << "Run macro '" << m_run_macro << "'";
     lym::Macro macro;
     macro.load_from (m_run_macro);
     macro.set_file_path (m_run_macro);
@@ -1181,7 +1181,7 @@ dump_children (QObject *obj, int level = 0)
     } else {
       info += geo::to_string (obj->objectName ());
     }
-    tl::info << info;
+    LOGI << info;
     for (QObjectList::const_iterator child = children.begin (); child != children.end (); ++child) {
       dump_children (*child, level + 1);
     }
@@ -1347,33 +1347,33 @@ int
 GuiApplication::exec ()
 {
   //  if requested, dump the widgets
-  if (tl::verbosity () >= 40) {
+  if (toolkit::logkit::verbosity () >= 40) {
 
     QWidgetList tl_widgets = QApplication::topLevelWidgets ();
 
-    tl::info << geo::to_string (QObject::tr ("Widget tree:"));
+    LOGI << geo::to_string (QObject::tr ("Widget tree:"));
     for (QWidgetList::const_iterator tl = tl_widgets.begin (); tl != tl_widgets.end (); ++tl) {
       if (! (*tl)->objectName ().isEmpty ()) {
         dump_children (*tl);
       }
     }
-    tl::info << "";
+    LOGI << "";
 
-    tl::info << geo::to_string (QObject::tr ("Actions list:"));
+    LOGI << geo::to_string (QObject::tr ("Actions list:"));
     for (QWidgetList::const_iterator tl = tl_widgets.begin (); tl != tl_widgets.end (); ++tl) {
       if (! (*tl)->objectName ().isEmpty ()) {
         QList<QAction *> actions = (*tl)->findChildren<QAction *> ();
         if (! actions.isEmpty ()) {
-          tl::info << geo::to_string ((*tl)->objectName ()) << ":";
+          LOGI << geo::to_string ((*tl)->objectName ()) << ":";
           for (QList<QAction *>::const_iterator a = actions.begin (); a != actions.end (); ++a) {
             if (! (*a)->objectName ().isEmpty ()) {
-              tl::info << "  " << geo::to_string ((*a)->objectName ());
+              LOGI << "  " << geo::to_string ((*a)->objectName ());
             }
           }
         }
       }
     }
-    tl::info << "";
+    LOGI << "";
 
   }
 

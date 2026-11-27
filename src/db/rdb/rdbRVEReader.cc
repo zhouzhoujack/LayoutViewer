@@ -11,6 +11,7 @@
 
 #include <cctype>
 #include <cstring>
+#include "tlLog.h"
 
 namespace rdb
 {
@@ -50,7 +51,7 @@ public:
 
   void do_read (Database &db)
   {
-    tl::SelfTimer timer (tl::verbosity () >= 11, "Reading RVE file");
+    tl::SelfTimer timer (toolkit::logkit::verbosity () >= 11, "Reading RVE file");
 
     tl::Extractor ex;
     std::string s;
@@ -427,7 +428,7 @@ private:
 
   void warn (const std::string &msg)
   { 
-    tl::warn << tl::sprintf (tl::to_string (tr ("%s (line=%lu)")), msg, m_input_stream.line_number ());
+    LOGW << tl::sprintf (tl::to_string (tr ("%s (line=%lu)")), msg, m_input_stream.line_number ());
   }
 
   void error (const std::string &msg)

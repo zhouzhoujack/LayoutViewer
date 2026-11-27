@@ -31,9 +31,9 @@ public:
     : m_initialized (false)
   {
     if (pthread_mutex_init (&m_mutex, NULL) != 0) {
-      tl::error << tr ("Unable to create pthread Mutex for WaitCondition");
+      LOGE << tr ("Unable to create pthread Mutex for WaitCondition");
     } else if (pthread_cond_init(&m_cond, NULL) != 0) {
-      tl::error << tr ("Unable to create pthread Condition for WaitCondition");
+      LOGE << tr ("Unable to create pthread Condition for WaitCondition");
     } else {
       m_initialized = true;
     }
@@ -77,13 +77,13 @@ public:
       if (res == ETIMEDOUT) {
         woken = false;
       } else if (res) {
-        tl::error << tr ("Error waiting for pthread Condition (timed)");
+        LOGE << tr ("Error waiting for pthread Condition (timed)");
       }
 
     } else {
 
       if (pthread_cond_wait (&m_cond, &m_mutex) != 0) {
-        tl::error << tr ("Error waiting for pthread Condition (timed)");
+        LOGE << tr ("Error waiting for pthread Condition (timed)");
       }
 
     }
@@ -187,10 +187,10 @@ void Thread::do_run ()
     run ();
     mp_data->running = false;
   } catch (tl::Exception &ex) {
-    tl::error << tr ("Exception from thread : ") << ex.msg ();
+    LOGE << tr ("Exception from thread : ") << ex.msg ();
     mp_data->running = false;
   } catch (...) {
-    tl::error << tr ("Unspecific exception from thread");
+    LOGE << tr ("Unspecific exception from thread");
     mp_data->running = false;
   }
 }
@@ -232,14 +232,14 @@ void Thread::start ()
   mp_data->initialized = true;
   mp_data->running = true;
   if (pthread_create (&mp_data->pthread, NULL, &start_thread, (void *) this) != 0) {
-    tl::error << tr ("Failed to create thread");
+    LOGE << tr ("Failed to create thread");
   }
 }
 
 void Thread::terminate ()
 {
   if (isRunning () && pthread_cancel (mp_data->pthread) != 0) {
-    tl::error << tr ("Failed to terminate thread");
+    LOGE << tr ("Failed to terminate thread");
   }
 }
 
@@ -286,7 +286,7 @@ bool Thread::wait (unsigned long time)
     if (res == ETIMEDOUT) {
       return false;
     } else if (res) {
-      tl::error << tr ("Could not join threads");
+      LOGE << tr ("Could not join threads");
     }
 
 #endif
@@ -296,7 +296,7 @@ bool Thread::wait (unsigned long time)
   } else {
 
     if (pthread_join (mp_data->pthread, &mp_data->return_code) != 0) {
-      tl::error << tr ("Could not join threads");
+      LOGE << tr ("Could not join threads");
     }
 
     return true;

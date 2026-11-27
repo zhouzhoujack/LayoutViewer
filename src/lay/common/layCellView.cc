@@ -69,15 +69,15 @@ LayoutHandle::LayoutHandle (geo::Layout *layout, const std::string &filename)
   mp_layout->prop_ids_changed_event.add (this, &LayoutHandle::layout_changed);
   mp_layout->layer_properties_changed_event.add (this, &LayoutHandle::layout_changed);
 
-  if (tl::verbosity () >= 30) {
-    tl::info << "Created layout " << name ();
+  if (toolkit::logkit::verbosity () >= 30) {
+    LOGI << "Created layout " << name ();
   }
 }
 
 LayoutHandle::~LayoutHandle ()
 {
-  if (tl::verbosity () >= 30) {
-    tl::info << "Deleted layout " << name ();
+  if (toolkit::logkit::verbosity () >= 30) {
+    LOGI << "Deleted layout " << name ();
   }
 
   delete mp_layout;
@@ -111,8 +111,8 @@ LayoutHandle::rename (const std::string &name, bool force)
 
     if (force || find (n) == 0) {
       ms_dict.erase (m_name);
-      if (tl::verbosity () >= 40) {
-        tl::info << "Renamed layout from " << m_name << " to " << n;
+      if (toolkit::logkit::verbosity () >= 40) {
+        LOGI << "Renamed layout from " << m_name << " to " << n;
       }
       m_name = n;
       ms_dict.insert (std::make_pair (n, this));
@@ -132,8 +132,8 @@ LayoutHandle::rename (const std::string &name, bool force)
 
     n = name + geo::sprintf ("[%d]", nn + 1);
 
-    if (tl::verbosity () >= 40) {
-      tl::info << "Renamed layout from " << m_name << " to " << n;
+    if (toolkit::logkit::verbosity () >= 40) {
+      LOGI << "Renamed layout from " << m_name << " to " << n;
     }
 
     if (find (m_name) == this) {
@@ -176,8 +176,8 @@ LayoutHandle::name () const
 void 
 LayoutHandle::add_ref ()
 {
-  if (tl::verbosity () >= 50) {
-    tl::info << "Add reference to " << m_name;
+  if (toolkit::logkit::verbosity () >= 50) {
+    LOGI << "Add reference to " << m_name;
   }
   ++m_ref_count;
 }
@@ -185,8 +185,8 @@ LayoutHandle::add_ref ()
 void 
 LayoutHandle::remove_ref ()
 {
-  if (tl::verbosity () >= 50) {
-    tl::info << "Remove reference from " << m_name;
+  if (toolkit::logkit::verbosity () >= 50) {
+    LOGI << "Remove reference from " << m_name;
   }
   if (--m_ref_count <= 0) {
     //  not nice, but hopefully we can do so:

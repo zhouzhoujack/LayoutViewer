@@ -57,7 +57,7 @@ BookmarkList::load (const std::string &fn)
   m_list.clear ();
   bookmarks_structure.parse (in, m_list); 
 
-  tl::log << "Loaded bookmarks from " << fn;
+  LOGI << "Loaded bookmarks from " << fn;
 }
 
 void 
@@ -66,7 +66,7 @@ BookmarkList::save (const std::string &fn) const
   tl::OutputStream os (fn, tl::OutputStream::OM_Plain);
   bookmarks_structure.write (os, m_list); 
 
-  tl::log << "Saved bookmarks to " << fn;
+  LOGI << "Saved bookmarks to " << fn;
 }
 
 std::string

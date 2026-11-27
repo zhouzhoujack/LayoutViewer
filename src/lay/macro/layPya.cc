@@ -178,7 +178,7 @@ PythonInterpreter::PythonInterpreter (bool embedded)
 
   }
 
-  tl::SelfTimer timer (tl::verbosity () >= 21, "Initializing Python");
+  tl::SelfTimer timer (toolkit::logkit::verbosity () >= 21, "Initializing Python");
 
   std::string app_path;
 #if defined(HAVE_QT)
@@ -217,7 +217,7 @@ PythonInterpreter::PythonInterpreter (bool embedded)
         std::string path_file = tl::combine_path (inst_dir, ".python-paths.txt");
         if (tl::file_exists (path_file)) {
 
-          tl::log << tl::to_string (tr ("Reading Python path from ")) << path_file;
+          LOGI << tl::to_string (tr ("Reading Python path from ")) << path_file;
 
           tl::InputStream path_file_stream (path_file);
           std::string path_file_text = path_file_stream.read_all ();
@@ -244,9 +244,9 @@ PythonInterpreter::PythonInterpreter (bool embedded)
       Py_SetPath (tl::to_wstring (path).c_str ());
 
     } catch (tl::Exception &ex) {
-      tl::error << tl::to_string (tr ("Evaluation of Python path expression failed")) << ": " << ex.msg ();
+      LOGE << tl::to_string (tr ("Evaluation of Python path expression failed")) << ": " << ex.msg ();
     } catch (...) {
-      tl::error << tl::to_string (tr ("Evaluation of Python path expression failed"));
+      LOGE << tl::to_string (tr ("Evaluation of Python path expression failed"));
     }
 
   }

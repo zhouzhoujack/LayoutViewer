@@ -96,7 +96,7 @@ Manager::transaction (const std::string &description, transaction_id_t join_with
 
     //  close transactions that are still open (was an assertion before)
     if (m_opened) {
-      tl::warn << tl::to_string (tr ("Transaction still opened: ")) << m_current->second;
+      LOGW << tl::to_string (tr ("Transaction still opened: ")) << m_current->second;
       commit ();
     }
 

@@ -33,7 +33,7 @@ static PluginDescriptor load_plugin (const std::string &pp)
   PluginDescriptor desc;
   desc.path = pp;
 
-  tl::log << tl::sprintf (tl::to_string (tr ("Loading plugin: %s")), pp);
+  LOGI << tl::sprintf (tl::to_string (tr ("Loading plugin: %s")), pp);
 
   dbp_init_func_t init_func = 0;
   static const char *init_func_name = "dbp_init";
@@ -87,7 +87,7 @@ void init (const std::vector<std::string> &_paths)
 
   if (paths.empty ()) {
     //  nothing to do
-    tl::log << tl::to_string (tr ("No db_plugins loaded - no path given"));
+    LOGI << tl::to_string (tr ("No db_plugins loaded - no path given"));
     return;
   }
 
@@ -99,8 +99,8 @@ void init (const std::vector<std::string> &_paths)
     const char *db_plugin_dir = "db";
     std::string pp = tl::combine_path (*p, db_plugin_dir);
 
-    if (tl::verbosity () >= 20) {
-      tl::info << "Scanning for db plugins: " << pp;
+    if (toolkit::logkit::verbosity () >= 20) {
+      LOGI << "Scanning for db plugins: " << pp;
     }
 
     std::vector<std::string> ee = tl::dir_entries (pp, true, false);
@@ -133,7 +133,7 @@ void init (const std::vector<std::string> &_paths)
           s_plugins.push_back (load_plugin (imp));
           modules.insert (*im);
         } catch (tl::Exception &ex) {
-          tl::error << ex.msg ();
+          LOGE << ex.msg ();
         }
       }
 

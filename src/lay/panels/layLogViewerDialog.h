@@ -55,7 +55,7 @@ private:
  *  @brief The log receiver abstraction that connects a channel with the LogFile object
  */
 class LogReceiver
-  : public tl::Channel 
+  : public toolkit::logkit::Channel 
 {
 public:
   LogReceiver (LogFile *file, int verbosity, void (LogFile::*method)(const std::string &, bool));
@@ -139,7 +139,7 @@ public slots:
   /**
    *  @brief Gets the error channel
    */
-  tl::Channel &error ()
+  toolkit::logkit::Channel &error ()
   {
     return m_error_receiver;
   }
@@ -147,7 +147,7 @@ public slots:
   /**
    *  @brief Gets the warning channel
    */
-  tl::Channel &warn ()
+  toolkit::logkit::Channel &warn ()
   {
     return m_warn_receiver;
   }
@@ -155,7 +155,7 @@ public slots:
   /**
    *  @brief Gets the info channel
    */
-  tl::Channel &info ()
+  toolkit::logkit::Channel &info ()
   {
     return m_info_receiver;
   }
@@ -163,7 +163,7 @@ public slots:
   /**
    *  @brief Gets the log channel
    */
-  tl::Channel &log ()
+  toolkit::logkit::Channel &log ()
   {
     return m_log_receiver;
   }
@@ -288,7 +288,7 @@ public:
   /**
    *  @brief Gets the error channel
    */
-  tl::Channel &error () const
+  toolkit::logkit::Channel &error () const
   {
     return mp_logger->file ().error ();
   }
@@ -296,7 +296,7 @@ public:
   /**
    *  @brief Gets the warn channel
    */
-  tl::Channel &warn () const
+  toolkit::logkit::Channel &warn () const
   {
     return mp_logger->file ().warn ();
   }
@@ -304,7 +304,7 @@ public:
   /**
    *  @brief Gets the info channel
    */
-  tl::Channel &info () const
+  toolkit::logkit::Channel &info () const
   {
     return mp_logger->file ().info ();
   }
@@ -312,7 +312,7 @@ public:
   /**
    *  @brief Gets the log channel
    */
-  tl::Channel &log () const
+  toolkit::logkit::Channel &log () const
   {
     return mp_logger->file ().log ();
   }

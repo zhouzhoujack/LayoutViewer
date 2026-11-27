@@ -2139,7 +2139,7 @@ EdgeProcessor::process (const std::vector<std::pair<db::EdgeSink *, db::EdgeEval
 void
 EdgeProcessor::redo_or_process (const std::vector<std::pair<db::EdgeSink *, db::EdgeEvaluatorBase *> > &gen, bool redo)
 {
-  tl::SelfTimer timer (tl::verbosity () >= m_base_verbosity, "EdgeProcessor: process");
+  tl::SelfTimer timer (toolkit::logkit::verbosity () >= m_base_verbosity, "EdgeProcessor: process");
 
   EdgeProcessorStates gs (gen);
 
@@ -2375,7 +2375,7 @@ EdgeProcessor::redo_or_process (const std::vector<std::pair<db::EdgeSink *, db::
   }
 
 
-  tl::SelfTimer timer2 (tl::verbosity () >= m_base_verbosity + 10, "EdgeProcessor: production");
+  tl::SelfTimer timer2 (toolkit::logkit::verbosity () >= m_base_verbosity + 10, "EdgeProcessor: production");
 
   //  step 4: compute the result edges 
   

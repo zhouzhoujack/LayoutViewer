@@ -252,7 +252,7 @@ HelpSource::initialize_index ()
 {
   try {
 
-    tl::SelfTimer timer (tl::verbosity () >= 21, geo::to_string (QObject::tr ("Initializing help index")));
+    tl::SelfTimer timer (toolkit::logkit::verbosity () >= 21, geo::to_string (QObject::tr ("Initializing help index")));
 
     bool ok = false;
 
@@ -274,11 +274,11 @@ HelpSource::initialize_index ()
           ok = true;
         }
       } catch (tl::Exception &ex) {
-        tl::warn << ex.msg ();
+        LOGW << ex.msg ();
       } catch (std::runtime_error &ex) {
-        tl::warn << ex.what ();
+        LOGW << ex.what ();
       } catch (...) {
-        tl::warn << "unknown error.";
+        LOGW << "unknown error.";
       }
 
     }
@@ -295,7 +295,7 @@ HelpSource::initialize_index ()
     m_title_map.clear ();
     m_parent_of.clear ();
 
-    tl::error << ex.msg ();
+    LOGE << ex.msg ();
 
   }
 }
@@ -321,11 +321,11 @@ HelpSource::produce_index_file (const std::string &path)
     help_index_structure.write (os, *this);
 
   } catch (tl::Exception &ex) {
-    tl::warn << ex.msg ();
+    LOGW << ex.msg ();
   } catch (std::runtime_error &ex) {
-    tl::warn << ex.what ();
+    LOGW << ex.what ();
   } catch (...) {
-    tl::warn << "unknown error.";
+    LOGW << "unknown error.";
   }
 }
 
@@ -345,8 +345,8 @@ HelpSource::klayout_version () const
 void
 HelpSource::scan (const std::string &path, geo::AbsoluteProgress &progress)
 {
-  if (tl::verbosity () >= 20) {
-    tl::info << "Help provider: scanning contents for " << path;
+  if (toolkit::logkit::verbosity () >= 20) {
+    LOGI << "Help provider: scanning contents for " << path;
   }
 
   ++progress;
@@ -448,8 +448,8 @@ HelpSource::get_dom (const std::string &u)
 
   for (tl::Registrar<lay::HelpProvider>::iterator cls = tl::Registrar<lay::HelpProvider>::begin (); cls != tl::Registrar<lay::HelpProvider>::end (); ++cls) {
     if (path.startsWith (geo::to_qstring ("/" + cls->folder () + "/"))) {
-      if (tl::verbosity () >= 20) {
-        tl::info << "Help provider: create content for " << u;
+      if (toolkit::logkit::verbosity () >= 20) {
+        LOGI << "Help provider: create content for " << u;
       }
       return cls->get (u);
     }
@@ -462,12 +462,12 @@ HelpSource::get_dom (const std::string &u)
     return produce_search (geo::to_string (url.queryItemValue (QString::fromUtf8 ("string")).toLower ()));
 #endif
   } else if (path == QString::fromUtf8 ("/index.xml")) {
-    if (tl::verbosity () >= 20) {
-      tl::info << "Help provider: create content for " << u;
+    if (toolkit::logkit::verbosity () >= 20) {
+      LOGI << "Help provider: create content for " << u;
     }
     return produce_main_index ();
   } else {
-    tl::error << "Help provider: no content for " << u;
+    LOGE << "Help provider: no content for " << u;
     return QDomDocument ();
   }
 }

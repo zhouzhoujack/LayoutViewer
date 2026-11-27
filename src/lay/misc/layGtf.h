@@ -515,7 +515,7 @@ private:
   bool m_save_incremental;
   std::string m_error_text;
   std::string m_log_file;
-  tl::Channel *mp_error_channel;
+  toolkit::logkit::Channel *mp_error_channel;
 };
 
 /**

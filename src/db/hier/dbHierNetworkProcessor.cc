@@ -2220,7 +2220,7 @@ template <class T>
 void
 hier_clusters<T>::do_build (cell_clusters_box_converter<T> &cbc, const db::Layout &layout, const db::Cell &cell, const db::Connectivity &conn, const std::map<db::cell_index_type, tl::equivalence_clusters<size_t> > *attr_equivalence, const std::set<db::cell_index_type> *breakout_cells)
 {
-  tl::SelfTimer timer (tl::verbosity () > m_base_verbosity, tl::to_string (tr ("Computing shape clusters")));
+  tl::SelfTimer timer (toolkit::logkit::verbosity () > m_base_verbosity, tl::to_string (tr ("Computing shape clusters")));
 
   std::set<db::cell_index_type> called;
   cell.collect_called_cells (called);
@@ -2229,7 +2229,7 @@ hier_clusters<T>::do_build (cell_clusters_box_converter<T> &cbc, const db::Layou
   //  first build all local clusters
 
   {
-    tl::SelfTimer timer (tl::verbosity () > m_base_verbosity + 10, tl::to_string (tr ("Computing local shape clusters")));
+    tl::SelfTimer timer (toolkit::logkit::verbosity () > m_base_verbosity + 10, tl::to_string (tr ("Computing local shape clusters")));
     tl::RelativeProgress progress (tl::to_string (tr ("Computing local clusters")), called.size (), 1);
 
     for (std::set<db::cell_index_type>::const_iterator c = called.begin (); c != called.end (); ++c) {
@@ -2265,7 +2265,7 @@ hier_clusters<T>::do_build (cell_clusters_box_converter<T> &cbc, const db::Layou
   instance_interaction_cache_type instance_interaction_cache;
 
   {
-    tl::SelfTimer timer (tl::verbosity () > m_base_verbosity + 10, tl::to_string (tr ("Computing hierarchical shape clusters")));
+    tl::SelfTimer timer (toolkit::logkit::verbosity () > m_base_verbosity + 10, tl::to_string (tr ("Computing hierarchical shape clusters")));
     tl::RelativeProgress progress (tl::to_string (tr ("Computing hierarchical clusters")), called.size (), 1);
 
     std::set<db::cell_index_type> done;
@@ -2297,8 +2297,8 @@ hier_clusters<T>::do_build (cell_clusters_box_converter<T> &cbc, const db::Layou
     build_hier_connections_for_cells (cbc, layout, todo, conn, breakout_cells, progress, instance_interaction_cache);
   }
 
-  if (tl::verbosity () >= m_base_verbosity + 20) {
-    tl::info << "Cluster build cache statistics (instance to instance cache): size=" << instance_interaction_cache.size () << ", hits=" << instance_interaction_cache.hits () << ", misses=" << instance_interaction_cache.misses ();
+  if (toolkit::logkit::verbosity () >= m_base_verbosity + 20) {
+    LOGI << "Cluster build cache statistics (instance to instance cache): size=" << instance_interaction_cache.size () << ", hits=" << instance_interaction_cache.hits () << ", misses=" << instance_interaction_cache.misses ();
   }
 }
 
@@ -2307,10 +2307,10 @@ void
 hier_clusters<T>::build_local_cluster (const db::Layout &layout, const db::Cell &cell, const db::Connectivity &conn, const tl::equivalence_clusters<size_t> *attr_equivalence)
 {
   std::string msg = tl::to_string (tr ("Computing local clusters for cell: ")) + std::string (layout.cell_name (cell.cell_index ()));
-  if (tl::verbosity () >= m_base_verbosity + 20) {
-    tl::log << msg;
+  if (toolkit::logkit::verbosity () >= m_base_verbosity + 20) {
+    LOGI << msg;
   }
-  tl::SelfTimer timer (tl::verbosity () > m_base_verbosity + 20, msg);
+  tl::SelfTimer timer (toolkit::logkit::verbosity () > m_base_verbosity + 20, msg);
 
   connected_clusters<T> &local = m_per_cell_clusters [cell.cell_index ()];
   local.build_clusters (cell, conn, attr_equivalence, true);
@@ -2408,10 +2408,10 @@ void
 hier_clusters<T>::build_hier_connections (cell_clusters_box_converter<T> &cbc, const db::Layout &layout, const db::Cell &cell, const db::Connectivity &conn, const std::set<db::cell_index_type> *breakout_cells, instance_interaction_cache_type &instance_interaction_cache)
 {
   std::string msg = tl::to_string (tr ("Computing hierarchical clusters for cell: ")) + std::string (layout.cell_name (cell.cell_index ()));
-  if (tl::verbosity () >= m_base_verbosity + 20) {
-    tl::log << msg;
+  if (toolkit::logkit::verbosity () >= m_base_verbosity + 20) {
+    LOGI << msg;
   }
-  tl::SelfTimer timer (tl::verbosity () > m_base_verbosity + 20, msg);
+  tl::SelfTimer timer (toolkit::logkit::verbosity () > m_base_verbosity + 20, msg);
 
   connected_clusters<T> &local = m_per_cell_clusters [cell.cell_index ()];
 
@@ -2440,7 +2440,7 @@ hier_clusters<T>::build_hier_connections (cell_clusters_box_converter<T> &cbc, c
 
   {
     static std::string desc = tl::to_string (tr ("Instance to instance treatment"));
-    tl::SelfTimer timer (tl::verbosity () > m_base_verbosity + 30, desc);
+    tl::SelfTimer timer (toolkit::logkit::verbosity () > m_base_verbosity + 30, desc);
 
     db::box_scanner<db::Instance, unsigned int> bs (true, desc);
 
@@ -2460,7 +2460,7 @@ hier_clusters<T>::build_hier_connections (cell_clusters_box_converter<T> &cbc, c
     double area_ratio = 10.0;
 
     static std::string desc = tl::to_string (tr ("Local to instance treatment"));
-    tl::SelfTimer timer (tl::verbosity () > m_base_verbosity + 30, desc);
+    tl::SelfTimer timer (toolkit::logkit::verbosity () > m_base_verbosity + 30, desc);
 
     db::box_scanner2<db::local_cluster<T>, unsigned int, db::Instance, unsigned int> bs2 (true, desc);
 
@@ -2492,8 +2492,8 @@ hier_clusters<T>::build_hier_connections (cell_clusters_box_converter<T> &cbc, c
   //  join local clusters which got connected by child clusters
   rec->finish_cluster_to_instance_interactions ();
 
-  if (tl::verbosity () >= m_base_verbosity + 20) {
-    tl::info << "Cluster build cache statistics (instance to shape cache): size=" << rec->cluster_cache_size () << ", hits=" << rec->cluster_cache_hits () << ", misses=" << rec->cluster_cache_misses ();
+  if (toolkit::logkit::verbosity () >= m_base_verbosity + 20) {
+    LOGI << "Cluster build cache statistics (instance to shape cache): size=" << rec->cluster_cache_size () << ", hits=" << rec->cluster_cache_hits () << ", misses=" << rec->cluster_cache_misses ();
   }
 
   rec.reset (0);
@@ -2501,7 +2501,7 @@ hier_clusters<T>::build_hier_connections (cell_clusters_box_converter<T> &cbc, c
   //  finally connect global nets
   {
     static std::string desc = tl::to_string (tr ("Global net treatment"));
-    tl::SelfTimer timer (tl::verbosity () > m_base_verbosity + 30, desc);
+    tl::SelfTimer timer (toolkit::logkit::verbosity () > m_base_verbosity + 30, desc);
 
     GlobalNetClusterMaker global_net_clusters;
 

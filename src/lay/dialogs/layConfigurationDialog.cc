@@ -77,7 +77,7 @@ ConfigurationDialog::init (const lay::PluginDeclaration *decl)
   if (page) {
     m_config_pages.push_back (page);
     if (page->layout () == 0) {
-      tl::warn << "No layout in configuration page " << config_title;
+      LOGW << "No layout in configuration page " << config_title;
     }
     layout->addWidget (page);
   }
@@ -86,7 +86,7 @@ ConfigurationDialog::init (const lay::PluginDeclaration *decl)
   for (std::vector <std::pair <std::string, lay::ConfigPage *> >::iterator p = pages.begin (); p != pages.end (); ++p) {
     m_config_pages.push_back (p->second);
     if (p->second->layout () == 0) {
-      tl::warn << "No layout in configuration page " << p->first;
+      LOGW << "No layout in configuration page " << p->first;
     }
     layout->addWidget (p->second);
     config_title = p->first;
@@ -122,7 +122,7 @@ ConfigurationDialog::ok_clicked ()
     commit ();
     accept ();
   } catch (tl::Exception &ex) {
-    tl::error << ex.msg ();
+    LOGE << ex.msg ();
     QMessageBox::critical (this, QObject::tr ("Error"), geo::to_qstring (ex.msg ()));
   } 
 }

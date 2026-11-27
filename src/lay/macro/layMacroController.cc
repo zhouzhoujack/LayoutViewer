@@ -15,6 +15,7 @@
 #include <QDir>
 #include <QUrl>
 #include <QMessageBox>
+#include "tlLog.h"
 
 namespace lay
 {
@@ -433,8 +434,8 @@ MacroController::sync_implicit_macros (bool ask_before_autorun)
     }
 
     for (std::vector<lym::MacroCollection *>::iterator m = folders_to_delete.begin (); m != folders_to_delete.end (); ++m) {
-      if (tl::verbosity () >= 20) {
-        tl::info << "Removing macro folder " << (*m)->path () << ", category '" << (*m)->category () << "' because no longer in use";
+      if (toolkit::logkit::verbosity () >= 20) {
+        LOGI << "Removing macro folder " << (*m)->path () << ", category '" << (*m)->category () << "' because no longer in use";
       }
       root->erase (*m);
     }
@@ -451,8 +452,8 @@ MacroController::sync_implicit_macros (bool ask_before_autorun)
         continue;
       }
 
-      if (tl::verbosity () >= 20) {
-        tl::info << "Adding macro folder " << p->path << ", category '" << p->cat << "' for '" << p->description << "'";
+      if (toolkit::logkit::verbosity () >= 20) {
+        LOGI << "Adding macro folder " << p->path << ", category '" << p->cat << "' for '" << p->description << "'";
       }
 
       //  Add the folder. Note: it may happen that a macro folder for the tech specific macros already exists in
@@ -757,7 +758,7 @@ MacroController::do_sync_with_external_sources ()
   try {
     sync_implicit_macros (true);
   } catch (tl::Exception &ex) {
-    tl::error << ex.msg ();
+    LOGE << ex.msg ();
   }
 }
 
@@ -846,7 +847,7 @@ MacroController::sync_file_watcher ()
 void
 MacroController::sync_files ()
 {
-  tl::log << tl::to_string (tr ("Detected file system change in macro folders - updating"));
+  LOGI << tl::to_string (tr ("Detected file system change in macro folders - updating"));
   lym::MacroCollection::root ().reload (true /*safe*/);
 }
 

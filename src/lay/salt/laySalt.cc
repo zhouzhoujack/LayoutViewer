@@ -264,12 +264,12 @@ Salt::remove_grain (const SaltGrain &grain)
   emit collections_about_to_change ();
 
   QString name = geo::to_qstring (grain.name ());
-  tl::info << QObject::tr ("Removing package '%1' ..").arg (name);
+  LOGI << QObject::tr ("Removing package '%1' ..").arg (name);
   bool res = remove_from_collection (m_root, grain.name ());
   if (res) {
-    tl::info << QObject::tr ("Package '%1' removed.").arg (name);
+    LOGI << QObject::tr ("Package '%1' removed.").arg (name);
   } else {
-    tl::warn << QObject::tr ("Failed to remove package '%1'.").arg (name);
+    LOGW << QObject::tr ("Failed to remove package '%1'.").arg (name);
   }
 
   invalidate ();
@@ -315,7 +315,7 @@ public:
 
           QFile file (target.absoluteFilePath (*t));
           if (! file.open (QIODevice::WriteOnly)) {
-            tl::error << QObject::tr ("Unable to open target file for writing: %1").arg (target.absoluteFilePath (*t));
+            LOGE << QObject::tr ("Unable to open target file for writing: %1").arg (target.absoluteFilePath (*t));
             return false;
           }
 
@@ -335,11 +335,11 @@ public:
           QFileInfo child_dir (target.absoluteFilePath (*t));
           if (! child_dir.exists ()) {
             if (! target.mkdir (*t)) {
-              tl::error << QObject::tr ("Unable to create target directory: %1").arg (child_dir.path ());
+              LOGE << QObject::tr ("Unable to create target directory: %1").arg (child_dir.path ());
               return false;
             }
           } else if (! child_dir.isDir ()) {
-            tl::error << QObject::tr ("Unable to create target directory (is a file already): %1").arg (child_dir.path ());
+            LOGE << QObject::tr ("Unable to create target directory (is a file already): %1").arg (child_dir.path ());
             return false;
           }
 
@@ -389,7 +389,7 @@ Salt::create_grain (const SaltGrain &templ, SaltGrain &target)
     tl_assert (coll != 0);
   }
 
-  tl::info << QObject::tr ("Installing package '%1' ..").arg (geo::to_qstring (target.name ()));
+  LOGI << QObject::tr ("Installing package '%1' ..").arg (geo::to_qstring (target.name ()));
 
   QDir target_dir (geo::to_qstring (coll->path ()));
 
@@ -418,7 +418,7 @@ Salt::create_grain (const SaltGrain &templ, SaltGrain &target)
     }
 
   } catch (tl::Exception &ex) {
-    tl::error << ex.msg ();
+    LOGE << ex.msg ();
     return false;
   }
 
@@ -434,13 +434,13 @@ Salt::create_grain (const SaltGrain &templ, SaltGrain &target)
     if (templ.path ()[0] != ':') {
 
       //  if the template represents an actual folder, use the files from there
-      tl::info << QObject::tr ("Copying package from '%1' to '%2' ..").arg (geo::to_qstring (templ.path ())).arg (geo::to_qstring (target.path ()));
+      LOGI << QObject::tr ("Copying package from '%1' to '%2' ..").arg (geo::to_qstring (templ.path ())).arg (geo::to_qstring (target.path ()));
       res = tl::cp_dir_recursive (templ.path (), target.path ());
 
     } else {
 
       //  if the template represents a resource path, use the files from there
-      tl::info << QObject::tr ("Installing package from resource '%1' to '%2' ..").arg (geo::to_qstring (templ.path ())).arg (geo::to_qstring (target.path ()));
+      LOGI << QObject::tr ("Installing package from resource '%1' to '%2' ..").arg (geo::to_qstring (templ.path ())).arg (geo::to_qstring (target.path ()));
       res = ResourceDir (geo::to_qstring (templ.path ())).copy_to (QDir (geo::to_qstring (target.path ())));
 
     }
@@ -450,7 +450,7 @@ Salt::create_grain (const SaltGrain &templ, SaltGrain &target)
     if (templ.url ().find ("http:") == 0 || templ.url ().find ("https:") == 0) {
 
       //  otherwise download from the URL
-      tl::info << QObject::tr ("Downloading package from '%1' to '%2' ..").arg (geo::to_qstring (templ.url ())).arg (geo::to_qstring (target.path ()));
+      LOGI << QObject::tr ("Downloading package from '%1' to '%2' ..").arg (geo::to_qstring (templ.url ())).arg (geo::to_qstring (target.path ()));
       res = tl::WebDAVObject::download (templ.url (), target.path ());
 
     } else {
@@ -462,7 +462,7 @@ Salt::create_grain (const SaltGrain &templ, SaltGrain &target)
         src = geo::to_string (QFileInfo (url.toLocalFile ()).absoluteFilePath ());
       }
 
-      tl::info << QObject::tr ("Copying package from '%1' to '%2' ..").arg (geo::to_qstring (src)).arg (geo::to_qstring (target.path ()));
+      LOGI << QObject::tr ("Copying package from '%1' to '%2' ..").arg (geo::to_qstring (src)).arg (geo::to_qstring (target.path ()));
       res = tl::cp_dir_recursive (src, target.path ());
 
     }
@@ -473,7 +473,7 @@ Salt::create_grain (const SaltGrain &templ, SaltGrain &target)
 
   if (res) {
 
-    tl::info << QObject::tr ("Package '%1' installed").arg (geo::to_qstring (target.name ()));
+    LOGI << QObject::tr ("Package '%1' installed").arg (geo::to_qstring (target.name ()));
     target.set_installed_time (QDateTime::currentDateTime ());
     target.save ();
 
@@ -482,9 +482,9 @@ Salt::create_grain (const SaltGrain &templ, SaltGrain &target)
 
   } else {
 
-    tl::warn << QObject::tr ("Failed to install package '%1' - removing files ..").arg (geo::to_qstring (target.name ()));
+    LOGW << QObject::tr ("Failed to install package '%1' - removing files ..").arg (geo::to_qstring (target.name ()));
     if (! tl::rm_dir_recursive (target.path ())) {
-      tl::warn << QObject::tr ("Failed to remove files").arg (geo::to_qstring (target.name ()));
+      LOGW << QObject::tr ("Failed to remove files").arg (geo::to_qstring (target.name ()));
     }
 
   }
