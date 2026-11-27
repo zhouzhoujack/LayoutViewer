@@ -910,13 +910,13 @@ OutputFileBase::OutputFileBase (const std::string &path, int keep_backups)
     m_backup_path = path + ".~backup";
     if (tl::file_exists (m_backup_path)) {
       if (! tl::rm_file (m_backup_path)) {
-        tl::warn << tl::sprintf (tl::to_string (tr ("Could not create backup file: unable to remove existing file '%s'")), m_backup_path);
+        LOGW << tl::sprintf (tl::to_string (tr ("Could not create backup file: unable to remove existing file '%s'")), m_backup_path);
         m_backup_path = std::string ();
       }
     }
     if (! m_backup_path.empty ()) {
       if (! tl::rename_file (path, m_backup_path)) {
-        tl::warn << tl::sprintf (tl::to_string (tr ("Could not create backup file: unable to rename original file '%s' to backup file")), path, m_backup_path);
+        LOGW << tl::sprintf (tl::to_string (tr ("Could not create backup file: unable to rename original file '%s' to backup file")), path, m_backup_path);
         m_backup_path = std::string ();
       }
     }
@@ -930,9 +930,9 @@ OutputFileBase::~OutputFileBase ()
     if (m_has_error) {
 
       if (! tl::rm_file (m_path)) {
-        tl::warn << tl::sprintf (tl::to_string (tr ("Could not restore backup file: unable to remove file '%s'")), m_path);
+        LOGW << tl::sprintf (tl::to_string (tr ("Could not restore backup file: unable to remove file '%s'")), m_path);
       } else if (! tl::rename_file (m_backup_path, m_path)) {
-        tl::warn << tl::sprintf (tl::to_string (tr ("Could not restore backup file: unable to rename file '%s' back to '%s'")), m_backup_path, m_path);
+        LOGW << tl::sprintf (tl::to_string (tr ("Could not restore backup file: unable to rename file '%s' back to '%s'")), m_backup_path, m_path);
       }
 
     } else {
@@ -940,7 +940,7 @@ OutputFileBase::~OutputFileBase ()
       if (m_keep_backups == 0) {
 
         if (! tl::rm_file (m_backup_path)) {
-          tl::warn << tl::sprintf (tl::to_string (tr ("Could not remove backup file '%s'")), m_backup_path);
+          LOGW << tl::sprintf (tl::to_string (tr ("Could not remove backup file '%s'")), m_backup_path);
         }
 
       } else {
@@ -959,11 +959,11 @@ OutputFileBase::~OutputFileBase ()
           std::string pprev = n > 1 ? (m_path + "." + tl::to_string (n - 1)) : m_backup_path;
           if (tl::file_exists (p)) {
             if (! tl::rm_file (p)) {
-              tl::warn << tl::sprintf (tl::to_string (tr ("Error shuffling backup files: unable to remove file '%s'")), p);
+              LOGW << tl::sprintf (tl::to_string (tr ("Error shuffling backup files: unable to remove file '%s'")), p);
             }
           }
           if (! tl::rename_file (pprev, p)) {
-            tl::warn << tl::sprintf (tl::to_string (tr ("Error shuffling backup files: unable to rename file '%s' to '%s'")), pprev, p);
+            LOGW << tl::sprintf (tl::to_string (tr ("Error shuffling backup files: unable to rename file '%s' to '%s'")), pprev, p);
           }
           --n;
         }

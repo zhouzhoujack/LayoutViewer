@@ -459,10 +459,10 @@ ClassBase::merge_declarations ()
   std::set<std::string> names;
   for (gsi::ClassBase::class_iterator c = gsi::ClassBase::begin_classes (); c != gsi::ClassBase::end_classes (); ++c) {
     if (c->declaration () == &*c && !types.insert (&c->type ()).second) {
-      tl::warn << "Duplicate GSI declaration of type " << c->type ().name ();
+      LOGW << "Duplicate GSI declaration of type " << c->type ().name ();
     }
     if (c->declaration () == &*c && !names.insert (c->declaration ()->name ()).second) {
-      tl::warn << "Duplicate GSI declaration of name " << c->declaration ()->name ();
+      LOGW << "Duplicate GSI declaration of name " << c->declaration ()->name ();
     }
   }
 
@@ -605,7 +605,7 @@ ClassBase::merge_declarations ()
 
     for (std::map<std::string, int>::const_iterator mc = method_counts.begin (); mc != method_counts.end (); ++mc) {
       if (mc->second > 1) {
-        tl::warn << "Ambiguous method declarations in class " << c->name () << " for method " << mc->first;
+        LOGW << "Ambiguous method declarations in class " << c->name () << " for method " << mc->first;
       }
     }
 
@@ -687,13 +687,13 @@ ClassBase::classes_in_definition_order (const char *mod_name)
           //  not considered.
         } else if ((*c)->declaration () && (*c)->declaration () != *c && taken.find ((*c)->declaration ()) == taken.end ()) {
           //  can't produce this class yet - it refers to a class which is not available.
-          tl::error << tl::sprintf ("class %s.%s refers to another class (%s.%s) which is not available", (*c)->module (), (*c)->name (), (*c)->declaration ()->module (), (*c)->declaration ()->name ());
+          LOGE << tl::sprintf ("class %s.%s refers to another class (%s.%s) which is not available", (*c)->module (), (*c)->name (), (*c)->declaration ()->module (), (*c)->declaration ()->name ());
         } else if ((*c)->parent () != 0 && taken.find ((*c)->parent ()) == taken.end ()) {
           //  can't produce this class yet - it's a child of a parent that is not produced yet.
-          tl::error << tl::sprintf ("parent of class %s.%s not available (%s.%s)", (*c)->module (), (*c)->name (), (*c)->parent ()->module (), (*c)->parent ()->name ());
+          LOGE << tl::sprintf ("parent of class %s.%s not available (%s.%s)", (*c)->module (), (*c)->name (), (*c)->parent ()->module (), (*c)->parent ()->name ());
         } else if ((*c)->base () != 0 && taken.find ((*c)->base ()) == taken.end ()) {
           //  can't produce this class yet. The base class needs to be handled first.
-          tl::error << tl::sprintf ("base of class %s.%s not available (%s.%s)", (*c)->module (), (*c)->name (), (*c)->base ()->module (), (*c)->base ()->name ());
+          LOGE << tl::sprintf ("base of class %s.%s not available (%s.%s)", (*c)->module (), (*c)->name (), (*c)->base ()->module (), (*c)->base ()->name ());
         }
 
       }
@@ -760,7 +760,7 @@ const ClassBase *class_by_name_no_assert (const std::string &name)
 
       if (!s_name_to_class.insert (std::make_pair (c->name (), c.operator-> ())).second) {
         //  Duplicate registration of this class
-        tl::error << "Duplicate registration of class " << c->name ();
+        LOGE << "Duplicate registration of class " << c->name ();
         tl_assert (false);
       }
 
@@ -780,7 +780,7 @@ const ClassBase *class_by_name (const std::string &name)
 {
   const ClassBase *cd = class_by_name_no_assert (name);
   if (! cd) {
-    tl::error << "No class with name " << name;
+    LOGE << "No class with name " << name;
     tl_assert (false);
   }
   return cd;
@@ -812,7 +812,7 @@ static void add_class_to_map (const gsi::ClassBase *c)
 
   if (!sp_ti_to_class->insert (std::make_pair (ti, c)).second) {
     //  Duplicate registration of this class
-    tl::error << "Duplicate registration of class " << c->name () << " (type " << ti->name () << ")";
+    LOGE << "Duplicate registration of class " << c->name () << " (type " << ti->name () << ")";
     tl_assert (false);
   } else {
     sp_tname_to_class->insert (std::make_pair (std::string (ti->name ()), c));
@@ -854,7 +854,7 @@ const ClassBase *class_by_typeinfo (const std::type_info &ti)
 {
   const ClassBase *cd = class_by_typeinfo_no_assert (ti);
   if (! cd) {
-    tl::error << "No class with type " << ti.name ();
+    LOGE << "No class with type " << ti.name ();
     tl_assert (false);
   }
   return cd;

@@ -84,7 +84,7 @@ Plugin::config_set (const std::string &name, const std::string &value)
   //         return;
   //       }
   //     } catch (tl::Exception &ex) {
-  //       tl::error << geo::to_string (QObject::tr ("Error on configure")) << " " << name << "='" << value << "': " << ex.msg ();
+  //       LOGE << geo::to_string (QObject::tr ("Error on configure")) << " " << name << "='" << value << "': " << ex.msg ();
   //     }
   //   }
   // }
@@ -207,7 +207,7 @@ Plugin::do_config_set (const std::string &name, const std::string &value, bool f
       return true;
     }
   } catch (tl::Exception &ex) {
-    tl::error << geo::to_string (QObject::tr ("Error on configure")) << " " << name << "='" << value << "': " << ex.msg ();
+    LOGE << geo::to_string (QObject::tr ("Error on configure")) << " " << name << "='" << value << "': " << ex.msg ();
   }
 
   //  propagate to all children (not only the first that takes it!)

@@ -368,8 +368,8 @@ LayoutCanvas::prepare_drawing ()
 
       mp_redraw_thread->commit (m_layers, m_viewport_l, 1.0 / double (m_oversampling * m_dpr));
 
-      if (tl::verbosity () >= 20) {
-        tl::info << "Restored image from cache";
+      if (toolkit::logkit::verbosity () >= 20) {
+        LOGI << "Restored image from cache";
       }
       restore_data (c->data ());
 
@@ -458,7 +458,7 @@ void
 LayoutCanvas::paintEvent (QPaintEvent *)
 {
   //  this is the update image request
-  tl::SelfTimer timer_info (tl::verbosity () >= 41, geo::to_string (QObject::tr ("PaintEvent")));
+  tl::SelfTimer timer_info (toolkit::logkit::verbosity () >= 41, geo::to_string (QObject::tr ("PaintEvent")));
 
   //  if required, start the redraw thread ..
   prepare_drawing ();

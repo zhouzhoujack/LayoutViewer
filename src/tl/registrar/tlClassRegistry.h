@@ -79,8 +79,8 @@ public:
     }
     mp_node = instance->insert (inst, owned, position, name);
     
-    if (tl::verbosity () >= 40) {
-      tl::info << "Registered object '" << name << "' with priority " << position;
+    if (toolkit::logkit::verbosity () >= 40) {
+      LOGI << "Registered object '" << name << "' with priority " << position;
     }
   }
 

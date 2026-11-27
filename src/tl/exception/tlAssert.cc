@@ -12,7 +12,7 @@ namespace tl
 extern "C"
 void _assertion_failed (const char *filename, unsigned int line, const char *condition)
 {
-  tl::error << filename << "," << line << "," << condition; 
+  LOGE << filename << "," << line << "," << condition; 
 }
 
 void 

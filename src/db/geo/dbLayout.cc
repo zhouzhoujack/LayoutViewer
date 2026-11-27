@@ -1645,7 +1645,7 @@ Layout::update () const
 void 
 Layout::do_update ()
 {
-  tl::SelfTimer timer (tl::verbosity () > layout_base_verbosity, tl::to_string (tr ("Sorting")));
+  tl::SelfTimer timer (toolkit::logkit::verbosity () > layout_base_verbosity, tl::to_string (tr ("Sorting")));
 
   //  establish a progress report since this operation can take some time.
   //  HINT: because of some gcc bug, automatic destruction of the tl::Progress
@@ -1662,12 +1662,12 @@ Layout::do_update ()
     //  the hierarchy management information
     if (hier_dirty ()) {
       {
-        tl::SelfTimer timer (tl::verbosity () > layout_base_verbosity + 10, "Updating relations");
+        tl::SelfTimer timer (toolkit::logkit::verbosity () > layout_base_verbosity + 10, "Updating relations");
         pr->set_desc (tl::to_string (tr ("Updating relations")));
         update_relations ();
       } 
       {
-        tl::SelfTimer timer (tl::verbosity () > layout_base_verbosity + 10, "Topological sort");
+        tl::SelfTimer timer (toolkit::logkit::verbosity () > layout_base_verbosity + 10, "Topological sort");
         pr->set_desc (tl::to_string (tr ("Topological sorting")));
         tl_assert (topological_sort ());
       }
@@ -1685,7 +1685,7 @@ Layout::do_update ()
     if (bboxes_dirty ()) {
 
       {
-        tl::SelfTimer timer (tl::verbosity () > layout_base_verbosity + 10, "Updating bounding boxes");
+        tl::SelfTimer timer (toolkit::logkit::verbosity () > layout_base_verbosity + 10, "Updating bounding boxes");
         unsigned int layers = 0;
         pr->set (0);
         pr->set_desc (tl::to_string (tr ("Updating bounding boxes")));
@@ -1707,7 +1707,7 @@ Layout::do_update ()
       }
 
       {
-        tl::SelfTimer timer (tl::verbosity () > layout_base_verbosity + 10, "Sorting shapes");
+        tl::SelfTimer timer (toolkit::logkit::verbosity () > layout_base_verbosity + 10, "Sorting shapes");
         pr->set (0);
         pr->set_desc (tl::to_string (tr ("Sorting shapes")));
         for (bottom_up_iterator c = begin_bottom_up (); c != end_bottom_up (); ++c) {
@@ -1720,7 +1720,7 @@ Layout::do_update ()
 
     //  sort the instance trees now, since we have computed the bboxes
     if (hier_dirty () || ! dirty_parents.empty ()) {
-      tl::SelfTimer timer (tl::verbosity () > layout_base_verbosity + 10, "Sorting instances");
+      tl::SelfTimer timer (toolkit::logkit::verbosity () > layout_base_verbosity + 10, "Sorting instances");
       size_t layers = 0;
       pr->set (0);
       pr->set_desc (tl::to_string (tr ("Sorting instances")));

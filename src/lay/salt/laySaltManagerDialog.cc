@@ -832,7 +832,7 @@ SaltManagerDialog::refresh ()
 {
   if (! m_salt_mine_url.empty ()) {
 
-    tl::log << geo::to_string (tr ("Downloading package repository from %1").arg (geo::to_qstring (m_salt_mine_url)));
+    LOGI << geo::to_string (tr ("Downloading package repository from %1").arg (geo::to_qstring (m_salt_mine_url)));
 
     m_salt_mine_reader.reset (new tl::InputStream (m_salt_mine_url));
     salt_mine_download_started ();

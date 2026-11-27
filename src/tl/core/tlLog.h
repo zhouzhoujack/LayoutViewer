@@ -7,12 +7,13 @@
 #include <QString>
 #include <string>
 
-//  toolkit/detail/tlAssert.h 也定义了 tl_assert 宏，但展开成不带限定的
-//  assertion_failed (...)，只能在 toolkit::logkit 内部用，所以下面把它覆盖回 tl:: 版本。
-#include <toolkit/tlLog.h>
+//  toolkit 0.1.3 起公共头统一改名为 lk* 前缀：tlLog.h -> detail/lkLog.h、
+//  tlGLog.h -> lkGLog.h；原 detail/tlAssert.h 也随之变为 detail/lkHelper.h
+//  （其中定义的是 lk_assert，不再和工程的 tl_assert 冲突）。
+#include <toolkit/detail/lkLog.h>
 
 //  LOGI / LOGW / LOGE / LOGF
-#include <toolkit/tlGLog.h>
+#include <toolkit/lkGLog.h>
 
 namespace toolkit { namespace logkit {
 

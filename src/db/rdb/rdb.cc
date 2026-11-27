@@ -1468,7 +1468,7 @@ Database::clear ()
 void
 Database::load (const std::string &fn)
 {
-  tl::log << "Loading RDB from " << fn;
+  LOGI << "Loading RDB from " << fn;
 
   tl::InputStream stream (fn);
   rdb::Reader reader (stream);
@@ -1481,8 +1481,8 @@ Database::load (const std::string &fn)
 
   reset_modified ();
 
-  if (tl::verbosity () >= 10) {
-    tl::info << "Loaded RDB from " << fn;
+  if (toolkit::logkit::verbosity () >= 10) {
+    LOGI << "Loaded RDB from " << fn;
   }
 }
 

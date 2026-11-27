@@ -2534,7 +2534,7 @@ void LayoutView::save_as(unsigned int index, const std::string& filename,
 {
     tl_assert(index < cellviews());
 
-    tl::SelfTimer timer(tl::verbosity() >= 11, geo::to_string(QObject::tr("Saving")));
+    tl::SelfTimer timer(toolkit::logkit::verbosity() >= 11, geo::to_string(QObject::tr("Saving")));
     cellview(index)->save_as(filename, om, options, update, keep_backups);
 
     cellview_changed(index);
@@ -3228,7 +3228,7 @@ void LayoutView::do_load_layer_props(const std::string& fn, bool map_cv, int cv_
 
     update_content();
 
-    tl::log << "Loaded layer properties from " << fn;
+    LOGI << "Loaded layer properties from " << fn;
 }
 
 void LayoutView::save_layer_props(const std::string& fn)
@@ -3254,7 +3254,7 @@ void LayoutView::save_layer_props(const std::string& fn)
         lay::LayerPropertiesList::save(os, props);
     }
 
-    tl::log << "Saved layer properties to " << fn;
+    LOGI << "Saved layer properties to " << fn;
 }
 
 void LayoutView::add_new_layers(const std::vector<unsigned int>& layer_ids, int cv_index)
@@ -3343,7 +3343,7 @@ void LayoutView::init_layer_properties(LayerProperties& p, const LayerProperties
 
 QImage LayoutView::get_screenshot()
 {
-    tl::SelfTimer timer(tl::verbosity() >= 11, geo::to_string(QObject::tr("Save screenshot")));
+    tl::SelfTimer timer(toolkit::logkit::verbosity() >= 11, geo::to_string(QObject::tr("Save screenshot")));
 
     //  Execute all deferred methods - ensure there are no pending tasks
     tl::DeferredMethodScheduler::execute();
@@ -3353,7 +3353,7 @@ QImage LayoutView::get_screenshot()
 
 void LayoutView::save_screenshot(const std::string& fn)
 {
-    tl::SelfTimer timer(tl::verbosity() >= 11, geo::to_string(QObject::tr("Save screenshot")));
+    tl::SelfTimer timer(toolkit::logkit::verbosity() >= 11, geo::to_string(QObject::tr("Save screenshot")));
 
     QImageWriter writer(geo::to_qstring(fn), QByteArray("PNG"));
 
@@ -3387,12 +3387,12 @@ void LayoutView::save_screenshot(const std::string& fn)
             geo::to_string(writer.errorString()));
     }
 
-    tl::log << "Saved screen shot to " << fn;
+    LOGI << "Saved screen shot to " << fn;
 }
 
 QImage LayoutView::get_image(unsigned int width, unsigned int height)
 {
-    tl::SelfTimer timer(tl::verbosity() >= 11, geo::to_string(QObject::tr("Save image")));
+    tl::SelfTimer timer(toolkit::logkit::verbosity() >= 11, geo::to_string(QObject::tr("Save image")));
 
     //  Execute all deferred methods - ensure there are no pending tasks
     tl::DeferredMethodScheduler::execute();
@@ -3405,7 +3405,7 @@ QImage LayoutView::get_image_with_options(unsigned int width, unsigned int heigh
                                           QColor foreground, QColor active,
                                           const geo::DBox& target_box, bool monochrome)
 {
-    tl::SelfTimer timer(tl::verbosity() >= 11, geo::to_string(QObject::tr("Save image")));
+    tl::SelfTimer timer(toolkit::logkit::verbosity() >= 11, geo::to_string(QObject::tr("Save image")));
 
     //  Execute all deferred methods - ensure there are no pending tasks
     tl::DeferredMethodScheduler::execute();
@@ -3416,7 +3416,7 @@ QImage LayoutView::get_image_with_options(unsigned int width, unsigned int heigh
 
 void LayoutView::save_image(const std::string& fn, unsigned int width, unsigned int height)
 {
-    tl::SelfTimer timer(tl::verbosity() >= 11, geo::to_string(QObject::tr("Save image")));
+    tl::SelfTimer timer(toolkit::logkit::verbosity() >= 11, geo::to_string(QObject::tr("Save image")));
 
     QImageWriter writer(geo::to_qstring(fn), QByteArray("PNG"));
 
@@ -3446,7 +3446,7 @@ void LayoutView::save_image(const std::string& fn, unsigned int width, unsigned 
             geo::to_string(writer.errorString()));
     }
 
-    tl::log << "Saved screen shot to " << fn;
+    LOGI << "Saved screen shot to " << fn;
 }
 
 void LayoutView::save_image_with_options(const std::string& fn, unsigned int width,
@@ -3454,7 +3454,7 @@ void LayoutView::save_image_with_options(const std::string& fn, unsigned int wid
                                          double resolution, QColor background, QColor foreground,
                                          QColor active, const geo::DBox& target_box, bool monochrome)
 {
-    tl::SelfTimer timer(tl::verbosity() >= 11, geo::to_string(QObject::tr("Save image")));
+    tl::SelfTimer timer(toolkit::logkit::verbosity() >= 11, geo::to_string(QObject::tr("Save image")));
 
     QImageWriter writer(geo::to_qstring(fn), QByteArray("PNG"));
 
@@ -3486,7 +3486,7 @@ void LayoutView::save_image_with_options(const std::string& fn, unsigned int wid
             geo::to_string(writer.errorString()));
     }
 
-    tl::log << "Saved screen shot to " << fn;
+    LOGI << "Saved screen shot to " << fn;
 }
 
 void LayoutView::reload_layout(unsigned int cv_index)
@@ -3579,8 +3579,8 @@ void LayoutView::reload_layout(unsigned int cv_index)
         }
 
         {
-            tl::log << geo::to_string(QObject::tr("Loading file: ")) << filename;
-            tl::SelfTimer timer(tl::verbosity() >= 11, geo::to_string(QObject::tr("Loading")));
+            LOGI << geo::to_string(QObject::tr("Loading file: ")) << filename;
+            tl::SelfTimer timer(toolkit::logkit::verbosity() >= 11, geo::to_string(QObject::tr("Loading")));
 
             //  Load with the previous options again.
             geo::LoadLayoutOptions options(cvorg->load_options());
@@ -3591,12 +3591,12 @@ void LayoutView::reload_layout(unsigned int cv_index)
         //  implicitly at some other time. This may throw an exception
         //  if the operation was cancelled.
         {
-            tl::SelfTimer timer(tl::verbosity() >= 11, geo::to_string(QObject::tr("Sorting")));
+            tl::SelfTimer timer(toolkit::logkit::verbosity() >= 11, geo::to_string(QObject::tr("Sorting")));
             cv->layout().update();
         }
 
         //  print the memory statistics now.
-        if (tl::verbosity() >= 31)
+        if (toolkit::logkit::verbosity() >= 31)
         {
             geo::MemStatisticsCollector m(false);
             cv->layout().mem_stat(&m, geo::MemStatistics::LayoutInfo, 0);
@@ -3868,11 +3868,11 @@ unsigned int LayoutView::load_layout(const std::string& filename,
     try
     {
 
-        tl::SelfTimer timer(tl::verbosity() >= 11, geo::to_string(QObject::tr("Loading")));
+        tl::SelfTimer timer(toolkit::logkit::verbosity() >= 11, geo::to_string(QObject::tr("Loading")));
 
         //  load the file
         {
-            tl::log << geo::to_string(QObject::tr("Loading file: ")) << filename
+            LOGI << geo::to_string(QObject::tr("Loading file: ")) << filename
                     << geo::to_string(QObject::tr(" with technology: ")) << technology;
             lmap = cv->load(options, technology);
         }
@@ -3885,7 +3885,7 @@ unsigned int LayoutView::load_layout(const std::string& filename,
         }
 
         //  print the memory statistics now.
-        if (tl::verbosity() >= 31)
+        if (toolkit::logkit::verbosity() >= 31)
         {
             geo::MemStatisticsCollector m(false);
             cv->layout().mem_stat(&m, geo::MemStatistics::LayoutInfo, 0);
@@ -4043,7 +4043,7 @@ void LayoutView::create_initial_layer_props(int cv_index, const std::string& lyp
             {
                 props.clear();
                 tl::XMLFileSource in(lyp_file);
-                tl::log << geo::to_string(QObject::tr("Loading layer properties file: "))
+                LOGI << geo::to_string(QObject::tr("Loading layer properties file: "))
                         << lyp_file;
                 lay::LayerPropertiesList::load(in, props);
                 loaded = true;
@@ -4051,11 +4051,11 @@ void LayoutView::create_initial_layer_props(int cv_index, const std::string& lyp
         }
         catch (tl::Exception& ex)
         {
-            tl::warn << geo::to_string(QObject::tr("Initialization of layers failed: ")) << ex.msg();
+            LOGW << geo::to_string(QObject::tr("Initialization of layers failed: ")) << ex.msg();
         }
         catch (...)
         {
-            tl::warn << geo::to_string(
+            LOGW << geo::to_string(
                 QObject::tr("Initialization of layers failed: unspecific error"));
         }
     }

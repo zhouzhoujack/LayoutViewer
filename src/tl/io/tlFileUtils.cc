@@ -418,7 +418,7 @@ bool mkpath (const std::string &p)
     front += parts[i++];
     if (! file_exists (front)) {
       if (! mkdir (front)) {
-        tl::error << tr ("Unable to create directory: ") << front;
+        LOGE << tr ("Unable to create directory: ") << front;
         return false;
       }
     }
@@ -481,13 +481,13 @@ bool rm_dir_recursive (const std::string &p)
   for (std::vector<std::string>::const_iterator e = entries.begin (); e != entries.end (); ++e) {
     std::string tc = tl::combine_path (path, *e);
     if (! rm_file (tc)) {
-      tl::error << tr ("Unable to remove file: ") << tc;
+      LOGE << tr ("Unable to remove file: ") << tc;
       return false;
     }
   }
 
   if (! rm_dir (path)) {
-    tl::error << tr ("Unable to remove directory: ") << path;
+    LOGE << tr ("Unable to remove directory: ") << path;
     return false;
   }
 
@@ -505,7 +505,7 @@ cp_dir_recursive (const std::string &source, const std::string &target)
   for (std::vector<std::string>::const_iterator e = entries.begin (); e != entries.end (); ++e) {
     std::string tc = tl::combine_path (path_to, *e);
     if (! mkpath (tc)) {
-      tl::error << tr ("Unable to create target directory: ") << tc;
+      LOGE << tr ("Unable to create target directory: ") << tc;
       return false;
     }
     if (! cp_dir_recursive (tl::combine_path (path, *e), tc)) {
@@ -528,7 +528,7 @@ cp_dir_recursive (const std::string &source, const std::string &target)
       is.copy_to (os);
 
     } catch (tl::Exception &ex) {
-      tl::error << tr ("Unable to copy file ") << tl::combine_path (path_to, *e) << tr (" to ") << tl::combine_path (path, *e)
+      LOGE << tr ("Unable to copy file ") << tl::combine_path (path_to, *e) << tr (" to ") << tl::combine_path (path, *e)
                 << tr ("(Error ") << ex.msg () << ")";
       return false;
     }
@@ -879,7 +879,7 @@ get_module_path (void *addr)
   if (dladdr (addr, &info)) {
     return tl::absolute_file_path (tl::to_string_from_local (info.dli_fname));
   } else {
-    tl::warn << tl::to_string (tr ("Unable to get path of db library (as basis for loading db_plugins)"));
+    LOGW << tl::to_string (tr ("Unable to get path of db library (as basis for loading db_plugins)"));
     return std::string ();
   }
 

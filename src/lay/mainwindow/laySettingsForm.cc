@@ -81,7 +81,7 @@ SettingsForm::SettingsForm (QWidget *parent, lay::Dispatcher *dispatcher, const 
 
       //  override external settings
       if (config_page->layout () == 0) {
-        tl::warn << "No layout in configuration page " << p->first;
+        LOGW << "No layout in configuration page " << p->first;
       } else {
         config_page->layout ()->setMargin (0);
       }

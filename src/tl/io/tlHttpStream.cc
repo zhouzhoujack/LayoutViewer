@@ -162,8 +162,8 @@ InputHttpStreamPrivateData::read (char *b, size_t n)
         //  Reason for this may be HTTPS initialization failure (OpenSSL)
 
         std::string em = tl::to_string (QObject::tr ("Request creation failed"));
-        if (tl::verbosity() >= 30) {
-            tl::info << "HTTP request creation failed";
+        if (toolkit::logkit::verbosity() >= 30) {
+            LOGI << "HTTP request creation failed";
         }
 
         throw HttpErrorException (em, 0, m_url);
@@ -172,8 +172,8 @@ InputHttpStreamPrivateData::read (char *b, size_t n)
 
         //  throw an error
         std::string em = tl::to_string (mp_reply->attribute (QNetworkRequest::HttpReasonPhraseAttribute).toString ());
-        if (tl::verbosity() >= 30) {
-            tl::info << "HTTP response error: " << em;
+        if (toolkit::logkit::verbosity() >= 30) {
+            LOGI << "HTTP response error: " << em;
         }
 
         int ec = mp_reply->attribute (QNetworkRequest::HttpStatusCodeAttribute).toInt ();
@@ -211,8 +211,8 @@ InputHttpStreamPrivateData::read (char *b, size_t n)
 
     QByteArray data = mp_reply->read (n);
     memcpy (b, data.constData (), data.size ());
-    if (tl::verbosity() >= 40) {
-        tl::info << "HTTP response data read: " << data.constData ();
+    if (toolkit::logkit::verbosity() >= 40) {
+        LOGI << "HTTP response data read: " << data.constData ();
     }
     return data.size ();
 }
@@ -231,11 +231,11 @@ InputHttpStreamPrivateData::finished (QNetworkReply *reply)
         return;
     }
 
-    if (tl::verbosity() >= 40) {
+    if (toolkit::logkit::verbosity() >= 40) {
 #if QT_VERSION >= 0x40800
         const QList<QNetworkReply::RawHeaderPair> &raw_headers = reply->rawHeaderPairs ();
         for (QList<QNetworkReply::RawHeaderPair>::const_iterator h = raw_headers.begin (); h != raw_headers.end (); ++h) {
-            tl::info << "HTTP response header: " << h->first.constData () << ": " << h->second.constData ();
+            LOGI << "HTTP response header: " << h->first.constData () << ": " << h->second.constData ();
         }
 #endif
     }
@@ -244,8 +244,8 @@ InputHttpStreamPrivateData::finished (QNetworkReply *reply)
     if (reply->error () == QNetworkReply::NoError && ! redirect_target.isNull ()) {
 
         m_url = tl::to_string (redirect_target.toString ());
-        if (tl::verbosity() >= 30) {
-            tl::info << "HTTP redirect to: " << m_url;
+        if (toolkit::logkit::verbosity() >= 30) {
+            LOGI << "HTTP redirect to: " << m_url;
         }
 
         close ();
@@ -275,8 +275,8 @@ InputHttpStreamPrivateData::issue_request (const QUrl &url)
     // s_auth_handler->reset ();
 
     QNetworkRequest request (url);
-    if (tl::verbosity() >= 30) {
-        tl::info << "HTTP request URL: " << url.toString ().toUtf8 ().constData ();
+    if (toolkit::logkit::verbosity() >= 30) {
+        LOGI << "HTTP request URL: " << url.toString ().toUtf8 ().constData ();
     }
     for (std::map<std::string, std::string>::const_iterator h = m_headers.begin (); h != m_headers.end (); ++h) {
         request.setRawHeader (QByteArray (h->first.c_str ()), QByteArray (h->second.c_str ()));
@@ -290,11 +290,11 @@ InputHttpStreamPrivateData::issue_request (const QUrl &url)
 #endif
 #endif
 
-    if (tl::verbosity() >= 40) {
-        tl::info << "HTTP request: " << m_request.constData ();
+    if (toolkit::logkit::verbosity() >= 40) {
+        LOGI << "HTTP request: " << m_request.constData ();
         const QList<QByteArray> &raw_headers = request.rawHeaderList ();
         for (QList<QByteArray>::const_iterator h = raw_headers.begin (); h != raw_headers.end (); ++h) {
-            tl::info << "HTTP request header: " << h->constData () << ": " << request.rawHeader (*h).constData ();
+            LOGI << "HTTP request header: " << h->constData () << ": " << request.rawHeader (*h).constData ();
         }
     }
 
@@ -308,8 +308,8 @@ InputHttpStreamPrivateData::issue_request (const QUrl &url)
     if (m_data.isEmpty ()) {
         // mp_active_reply.reset (s_network_manager->sendCustomRequest (request, m_request));
     } else {
-        if (tl::verbosity() >= 40) {
-            tl::info << "HTTP request data: " << m_data.constData ();
+        if (toolkit::logkit::verbosity() >= 40) {
+            LOGI << "HTTP request data: " << m_data.constData ();
         }
         mp_buffer = new QBuffer (&m_data);
         // mp_active_reply.reset (s_network_manager->sendCustomRequest (request, m_request, mp_buffer));

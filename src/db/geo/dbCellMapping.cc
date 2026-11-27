@@ -389,10 +389,10 @@ CellMapping::do_create_missing_mapping (db::Layout &layout_a, const db::Layout &
 void 
 CellMapping::create_from_geometry (const db::Layout &layout_a, db::cell_index_type cell_index_a, const db::Layout &layout_b, db::cell_index_type cell_index_b)
 {
-  tl::SelfTimer timer (tl::verbosity () >= 11, tl::to_string (tr ("Cell mapping")));
+  tl::SelfTimer timer (toolkit::logkit::verbosity () >= 11, tl::to_string (tr ("Cell mapping")));
 
-  if (tl::verbosity () >= 20) {
-    tl::info << "Cell mapping - first step: mapping instance count and instance identity";
+  if (toolkit::logkit::verbosity () >= 20) {
+    LOGI << "Cell mapping - first step: mapping instance count and instance identity";
   }
 
   clear ();
@@ -429,7 +429,7 @@ CellMapping::create_from_geometry (const db::Layout &layout_a, db::cell_index_ty
       ++a;
     } else {
 
-      if (tl::verbosity () >= 30) {
+      if (toolkit::logkit::verbosity () >= 30) {
         size_t na = 0, nb = 0;
         for (std::multimap<size_t, db::cell_index_type>::const_iterator aa = a; aa != cm_a.end () && aa->first == w; ++aa) {
           ++na;
@@ -437,7 +437,7 @@ CellMapping::create_from_geometry (const db::Layout &layout_a, db::cell_index_ty
         for (std::multimap<size_t, db::cell_index_type>::const_iterator bb = b; bb != cm_b.end () && bb->first == w; ++bb) {
           ++nb;
         }
-        tl::info << "Multiplicity group (" << w << " instances) - " << na << " vs. " << nb << " cells";
+        LOGI << "Multiplicity group (" << w << " instances) - " << na << " vs. " << nb << " cells";
       }
 
       unsigned int g = 0;
@@ -477,8 +477,8 @@ CellMapping::create_from_geometry (const db::Layout &layout_a, db::cell_index_ty
 
         }
 
-        if (tl::verbosity () >= 40) {
-          tl::info << "Checked cell " << layout_a.cell_name (a->second) << ": " << candidates [a->second].size () << " candidates remaining.";
+        if (toolkit::logkit::verbosity () >= 40) {
+          LOGI << "Checked cell " << layout_a.cell_name (a->second) << ": " << candidates [a->second].size () << " candidates remaining.";
         }
           
         ++a;
@@ -499,8 +499,8 @@ CellMapping::create_from_geometry (const db::Layout &layout_a, db::cell_index_ty
     ++a;
   }
 
-  if (tl::verbosity () >= 40) {
-    tl::info << "Mapping candidates:";
+  if (toolkit::logkit::verbosity () >= 40) {
+    LOGI << "Mapping candidates:";
     dump_mapping (candidates, layout_a, layout_b);
   }
     
@@ -516,8 +516,8 @@ CellMapping::create_from_geometry (const db::Layout &layout_a, db::cell_index_ty
     reduction = false;
     ++iteration;
 
-    if (tl::verbosity () >= 20) {
-      tl::info << "Cell mapping - iteration " << iteration << ": cross-instance cone reduction";
+    if (toolkit::logkit::verbosity () >= 20) {
+      LOGI << "Cell mapping - iteration " << iteration << ": cross-instance cone reduction";
     }
 
     // This map stores that layout_b cells with the corresponding layout_a cell for such cells which 
@@ -533,13 +533,13 @@ CellMapping::create_from_geometry (const db::Layout &layout_a, db::cell_index_ty
         refined_cand.clear ();
         refined_cand.insert (refined_cand.end (), cand->second.begin (), cand->second.end ());
 
-        if (tl::verbosity () >= 50) {
-          tl::info << "--- Cell: " << layout_a.cell_name (cand->first);
-          tl::info << "Before reduction: " << tl::noendl; 
+        if (toolkit::logkit::verbosity () >= 50) {
+          LOGI << "--- Cell: " << layout_a.cell_name (cand->first);
+          LOGI << "Before reduction: " << toolkit::logkit::noendl; 
           for (size_t i = 0; i < refined_cand.size (); ++i) { 
-            tl::info << " " << layout_b.cell_name(refined_cand[i]) << tl::noendl; 
+            LOGI << " " << layout_b.cell_name(refined_cand[i]) << toolkit::logkit::noendl; 
           } 
-          tl::info << "";
+          LOGI << "";
         }
 
         std::set<db::cell_index_type> callers;
@@ -562,13 +562,13 @@ CellMapping::create_from_geometry (const db::Layout &layout_a, db::cell_index_ty
                 }
               }
 
-              if (tl::verbosity () >= 50 && cout != refined_cand.end ()) {
-                tl::info << "Reduction because of caller mapping: " << layout_a.cell_name (*c) << " <-> " << layout_b.cell_name (others[0]);
-                tl::info << "  -> " << tl::noendl; 
+              if (toolkit::logkit::verbosity () >= 50 && cout != refined_cand.end ()) {
+                LOGI << "Reduction because of caller mapping: " << layout_a.cell_name (*c) << " <-> " << layout_b.cell_name (others[0]);
+                LOGI << "  -> " << toolkit::logkit::noendl; 
                 for (size_t i = 0; i < size_t (cout - refined_cand.begin ()); ++i) { 
-                  tl::info << " " << layout_b.cell_name(refined_cand[i]) << tl::noendl; 
+                  LOGI << " " << layout_b.cell_name(refined_cand[i]) << toolkit::logkit::noendl; 
                 } 
-                tl::info << "";
+                LOGI << "";
               }
 
               refined_cand.erase (cout, refined_cand.end ());
@@ -599,13 +599,13 @@ CellMapping::create_from_geometry (const db::Layout &layout_a, db::cell_index_ty
                 }
               }
 
-              if (tl::verbosity () >= 50 && cout != refined_cand.end ()) {
-                tl::info << "Reduction because of callee mapping: " << layout_a.cell_name (*c) << " <-> " << layout_b.cell_name (others[0]);
-                tl::info << "  -> " << tl::noendl; 
+              if (toolkit::logkit::verbosity () >= 50 && cout != refined_cand.end ()) {
+                LOGI << "Reduction because of callee mapping: " << layout_a.cell_name (*c) << " <-> " << layout_b.cell_name (others[0]);
+                LOGI << "  -> " << toolkit::logkit::noendl; 
                 for (size_t i = 0; i < size_t (cout - refined_cand.begin ()); ++i) { 
-                  tl::info << " " << layout_b.cell_name(refined_cand[i]) << tl::noendl; 
+                  LOGI << " " << layout_b.cell_name(refined_cand[i]) << toolkit::logkit::noendl; 
                 } 
-                tl::info << "";
+                LOGI << "";
               }
 
               refined_cand.erase (cout, refined_cand.end ());
@@ -626,16 +626,16 @@ CellMapping::create_from_geometry (const db::Layout &layout_a, db::cell_index_ty
                 int ed = tl::edit_distance (layout_a.cell_name (ca), layout_b.cell_name (cb));
                 if (ed < uc->second.second) {
                   uc->second = std::make_pair (ca, ed);
-                  if (tl::verbosity () >= 40) {
-                    tl::info << "Choosing " << layout_b.cell_name (cb) << " (layout_b) as new unique mapping for " << layout_a.cell_name (ca) << " (layout_a)";
+                  if (toolkit::logkit::verbosity () >= 40) {
+                    LOGI << "Choosing " << layout_b.cell_name (cb) << " (layout_b) as new unique mapping for " << layout_a.cell_name (ca) << " (layout_a)";
                   }
                 }
               }
             } else {
               int ed = tl::edit_distance (layout_a.cell_name (ca), layout_b.cell_name (cb));
               unique_candidates.insert (std::make_pair (cb, std::make_pair (ca, ed)));
-              if (tl::verbosity () >= 40) {
-                tl::info << "Choosing " << layout_b.cell_name (cb) << " (layout_b) as unique mapping for " << layout_a.cell_name (ca) << " (layout_a)";
+              if (toolkit::logkit::verbosity () >= 40) {
+                LOGI << "Choosing " << layout_b.cell_name (cb) << " (layout_b) as unique mapping for " << layout_a.cell_name (ca) << " (layout_a)";
               }
             }
 
@@ -659,13 +659,13 @@ CellMapping::create_from_geometry (const db::Layout &layout_a, db::cell_index_ty
 
     }
 
-    if (tl::verbosity () >= 40) {
-      tl::info << "Further refined candidates:";
+    if (toolkit::logkit::verbosity () >= 40) {
+      LOGI << "Further refined candidates:";
       dump_mapping (candidates, layout_a, layout_b);
     }
     
-    if (tl::verbosity () >= 20) {
-      tl::info << "Cell mapping - iteration " << iteration << ": removal of uniquely mapped cells on B side";
+    if (toolkit::logkit::verbosity () >= 20) {
+      LOGI << "Cell mapping - iteration " << iteration << ": removal of uniquely mapped cells on B side";
     }
 
     for (std::map <db::cell_index_type, std::vector<db::cell_index_type> >::iterator cand = candidates.begin (); cand != candidates.end (); ++cand) {
@@ -690,14 +690,14 @@ CellMapping::create_from_geometry (const db::Layout &layout_a, db::cell_index_ty
 
     }
     
-    if (tl::verbosity () >= 40) {
-      tl::info << "After reduction of mapped cells on b side:";
+    if (toolkit::logkit::verbosity () >= 40) {
+      LOGI << "After reduction of mapped cells on b side:";
       dump_mapping (candidates, layout_a, layout_b);
     }
     
   }
 
-  if (tl::verbosity () >= 20) {
+  if (toolkit::logkit::verbosity () >= 20) {
 
     int total = 0;
     int not_mapped = 0;
@@ -717,18 +717,18 @@ CellMapping::create_from_geometry (const db::Layout &layout_a, db::cell_index_ty
       }
     }
 
-    tl::info << "Geometry mapping statistics:";
-    tl::info << "  Total cells = " << total;
-    tl::info << "  Not mapped = " << not_mapped;
-    tl::info << "  Unique = " << unique;
-    tl::info << "  Non unique = " << non_unique << " (total " << alternatives << " of alternatives)";
+    LOGI << "Geometry mapping statistics:";
+    LOGI << "  Total cells = " << total;
+    LOGI << "  Not mapped = " << not_mapped;
+    LOGI << "  Unique = " << unique;
+    LOGI << "  Non unique = " << non_unique << " (total " << alternatives << " of alternatives)";
 
   }
 
   //  Resolve mapping according to string match
 
-  if (tl::verbosity () >= 20) {
-    tl::info << "Cell mapping - string mapping as last resort";
+  if (toolkit::logkit::verbosity () >= 20) {
+    LOGI << "Cell mapping - string mapping as last resort";
   }
 
   for (std::map <db::cell_index_type, std::vector<db::cell_index_type> >::iterator cand = candidates.begin (); cand != candidates.end (); ++cand) {
@@ -764,7 +764,7 @@ CellMapping::create_from_geometry (const db::Layout &layout_a, db::cell_index_ty
 
   }
 
-  if (tl::verbosity () >= 20) {
+  if (toolkit::logkit::verbosity () >= 20) {
 
     int total = 0;
     int not_mapped = 0;
@@ -775,8 +775,8 @@ CellMapping::create_from_geometry (const db::Layout &layout_a, db::cell_index_ty
     for (std::map <db::cell_index_type, std::vector<db::cell_index_type> >::iterator cand = candidates.begin (); cand != candidates.end (); ++cand) {
       ++total;
       if (cand->second.size () == 0) {
-        if (tl::verbosity () >= 30) {
-          tl::info << "Unmapped cell: " << layout_a.cell_name (cand->first);
+        if (toolkit::logkit::verbosity () >= 30) {
+          LOGI << "Unmapped cell: " << layout_a.cell_name (cand->first);
         }
         ++not_mapped;
       } else if (cand->second.size () == 1) {
@@ -787,11 +787,11 @@ CellMapping::create_from_geometry (const db::Layout &layout_a, db::cell_index_ty
       }
     }
 
-    tl::info << "Final mapping statistics:";
-    tl::info << "  Total cells = " << total;
-    tl::info << "  Not mapped = " << not_mapped;
-    tl::info << "  Unique = " << unique;
-    tl::info << "  Non unique = " << non_unique << " (total " << alternatives << " of alternatives)";
+    LOGI << "Final mapping statistics:";
+    LOGI << "  Total cells = " << total;
+    LOGI << "  Not mapped = " << not_mapped;
+    LOGI << "  Unique = " << unique;
+    LOGI << "  Non unique = " << non_unique << " (total " << alternatives << " of alternatives)";
 
   }
 }
@@ -803,22 +803,22 @@ CellMapping::extract_unique (std::map <db::cell_index_type, std::vector<db::cell
 {
   if (cand->second.size () == 1) {
 
-    if (tl::verbosity () >= 20) {
-      tl::info << "  (U) " << layout_a.cell_name (cand->first) << " -> " << layout_b.cell_name (cand->second.front ()) << " (" << cand->first << " -> " << cand->second.front () << ")";
+    if (toolkit::logkit::verbosity () >= 20) {
+      LOGI << "  (U) " << layout_a.cell_name (cand->first) << " -> " << layout_b.cell_name (cand->second.front ()) << " (" << cand->first << " -> " << cand->second.front () << ")";
     }
     unique_mapping.insert (std::make_pair (cand->second.front (), cand->first));
 
-  } else if (tl::verbosity () >= 30) {
+  } else if (toolkit::logkit::verbosity () >= 30) {
 
-    tl::info << "      " << layout_a.cell_name (cand->first) << " ->" << tl::noendl;
+    LOGI << "      " << layout_a.cell_name (cand->first) << " ->" << toolkit::logkit::noendl;
     int n = 5;
     for (std::vector<db::cell_index_type>::const_iterator c = cand->second.begin (); c != cand->second.end () && --n > 0; ++c) {
-      tl::info << " " << layout_b.cell_name (*c) << tl::noendl;
+      LOGI << " " << layout_b.cell_name (*c) << toolkit::logkit::noendl;
     }
     if (n == 0) {
-      tl::info << " ..";
+      LOGI << " ..";
     } else {
-      tl::info << "";
+      LOGI << "";
     }
 
   }
@@ -829,15 +829,15 @@ CellMapping::dump_mapping (const std::map <db::cell_index_type, std::vector<db::
                            const db::Layout &layout_a, const db::Layout &layout_b)
 {
   for (std::map <db::cell_index_type, std::vector<db::cell_index_type> >::const_iterator cand = candidates.begin (); cand != candidates.end (); ++cand) {
-    tl::info << "  " << layout_a.cell_name (cand->first) << " ->" << tl::noendl;
+    LOGI << "  " << layout_a.cell_name (cand->first) << " ->" << toolkit::logkit::noendl;
     int n = 5;
     for (std::vector<db::cell_index_type>::const_iterator c = cand->second.begin (); c != cand->second.end () && --n > 0; ++c) {
-      tl::info << " " << layout_b.cell_name (*c) << tl::noendl;
+      LOGI << " " << layout_b.cell_name (*c) << toolkit::logkit::noendl;
     }
     if (n == 0) {
-      tl::info << " ..";
+      LOGI << " ..";
     } else {
-      tl::info << "";
+      LOGI << "";
     }
   }
 }

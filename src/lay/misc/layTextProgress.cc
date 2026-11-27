@@ -21,8 +21,8 @@ void TextProgress::update_progress (geo::Progress *progress)
   }
 
   std::string text = progress->desc ();
-  if (m_progress_text != text && tl::verbosity () >= m_verbosity) {
-    tl::info << text << " ..";
+  if (m_progress_text != text && toolkit::logkit::verbosity () >= m_verbosity) {
+    LOGI << text << " ..";
     m_progress_text = text;
   }
 
@@ -31,8 +31,8 @@ void TextProgress::update_progress (geo::Progress *progress)
     value += " " + p->formatted_value ();
   }
 
-  if (m_progress_value != value && tl::verbosity () >= m_verbosity) {
-    tl::info << ".. " << value;
+  if (m_progress_value != value && toolkit::logkit::verbosity () >= m_verbosity) {
+    LOGI << ".. " << value;
     m_progress_value = value;
   }
 }

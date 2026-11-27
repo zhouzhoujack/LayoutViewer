@@ -6,6 +6,7 @@
 #include "tlProgress.h"
 #include "tlTimer.h"
 #include "tlInternational.h"
+#include "tlLog.h"
 
 namespace db
 {
@@ -229,7 +230,7 @@ void NetlistDeviceExtractor::extract_without_initialize (db::Layout &layout, db:
   db::hier_clusters<shape_type> device_clusters;
   device_clusters.build (layout, cell, device_conn, 0, breakout_cells);
 
-  tl::SelfTimer timer (tl::verbosity () >= 21, tl::to_string (tr ("Extracting devices")));
+  tl::SelfTimer timer (toolkit::logkit::verbosity () >= 21, tl::to_string (tr ("Extracting devices")));
 
   //  count effort and make a progress reporter
 
@@ -566,8 +567,8 @@ void NetlistDeviceExtractor::error (const std::string &msg)
 {
   m_errors.push_back (db::NetlistDeviceExtractorError (cell_name (), msg));
 
-  if (tl::verbosity () >= 20) {
-    tl::error << m_errors.back ().to_string ();
+  if (toolkit::logkit::verbosity () >= 20) {
+    LOGE << m_errors.back ().to_string ();
   }
 }
 
@@ -576,8 +577,8 @@ void NetlistDeviceExtractor::error (const std::string &msg, const db::DPolygon &
   m_errors.push_back (db::NetlistDeviceExtractorError (cell_name (), msg));
   m_errors.back ().set_geometry (poly);
 
-  if (tl::verbosity () >= 20) {
-    tl::error << m_errors.back ().to_string ();
+  if (toolkit::logkit::verbosity () >= 20) {
+    LOGE << m_errors.back ().to_string ();
   }
 }
 
@@ -587,8 +588,8 @@ void NetlistDeviceExtractor::error (const std::string &category_name, const std:
   m_errors.back ().set_category_name (category_name);
   m_errors.back ().set_category_description (category_description);
 
-  if (tl::verbosity () >= 20) {
-    tl::error << m_errors.back ().to_string ();
+  if (toolkit::logkit::verbosity () >= 20) {
+    LOGE << m_errors.back ().to_string ();
   }
 }
 
@@ -599,8 +600,8 @@ void NetlistDeviceExtractor::error (const std::string &category_name, const std:
   m_errors.back ().set_category_description (category_description);
   m_errors.back ().set_geometry (poly);
 
-  if (tl::verbosity () >= 20) {
-    tl::error << m_errors.back ().to_string ();
+  if (toolkit::logkit::verbosity () >= 20) {
+    LOGE << m_errors.back ().to_string ();
   }
 }
 

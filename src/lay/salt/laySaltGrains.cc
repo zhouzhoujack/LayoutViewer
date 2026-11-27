@@ -334,8 +334,8 @@ SaltGrains::include (const std::string &src_in)
 
     }
 
-    if (tl::verbosity () >= 20) {
-      tl::log << "Including package index from " << src;
+    if (toolkit::logkit::verbosity () >= 20) {
+      LOGI << "Including package index from " << src;
     }
 
     lay::SaltGrains g;

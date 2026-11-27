@@ -164,7 +164,7 @@ StatisticsTemplateProcessor::process ()
 
   try
   {
-    tl::SelfTimer timer (tl::verbosity () > 21, "StatisticsForm: create content");
+    tl::SelfTimer timer (toolkit::logkit::verbosity () > 21, "StatisticsForm: create content");
 
     QDomDocument doc;
     doc.setContent (m_temp, true);
@@ -177,7 +177,7 @@ StatisticsTemplateProcessor::process ()
     ret_value = true;
 
   } catch (tl::Exception &ex) {
-    tl::error << ex.msg ();
+    LOGE << ex.msg ();
     QTextStream writer (&m_output);
     writer << geo::to_string (QObject::tr ("ERROR: evaluating template: ")).c_str () << ex.msg ().c_str ();
   }
@@ -340,7 +340,7 @@ StatisticsTemplateProcessor::process (const QDomElement &element, geo::Eval &eva
 #else
       // TODO(layout-core): layout-core 的预编译库里没有导出 geo::LayoutQuery /
       // geo::LayoutQueryIterator，统计模板的 <query> 指令暂不支持。
-      tl::warn << tl::to_string (QObject::tr ("Layout statistics: query templates are not available in this build")) << "\n";
+      LOGW << tl::to_string (QObject::tr ("Layout statistics: query templates are not available in this build")) << "\n";
 #endif
 
     }

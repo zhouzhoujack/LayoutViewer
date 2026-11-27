@@ -141,7 +141,7 @@ dump_children (QObject *obj, int level = 0)
   info += " (";
   info += obj->metaObject ()->className ();
   info += geo::sprintf(") - %p", (size_t)obj);
-  tl::info << info;
+  LOGI << info;
   for (QObjectList::const_iterator child = children.begin (); child != children.end (); ++child) {
     if (is_widget (*child)) {
       dump_children (*child, level + 1);
@@ -154,13 +154,13 @@ dump_widget_tree ()
 {
   QWidgetList tl_widgets = QApplication::topLevelWidgets (); 
 
-  tl::info << geo::to_string (QObject::tr ("Widget tree:"));
+  LOGI << geo::to_string (QObject::tr ("Widget tree:"));
   for (QWidgetList::const_iterator tl = tl_widgets.begin (); tl != tl_widgets.end (); ++tl) { 
     if (is_widget (*tl)) {
       dump_children (*tl); 
     }
   }
-  tl::info << "";
+  LOGI << "";
 }
 
 static bool extract_widget_path (geo::Extractor &x, std::string &name, std::string &cls, int &nwidget)
@@ -1120,7 +1120,7 @@ is_valid_widget (QWidget *w)
 }
 
 class ErrorLogRecorder
-  : public tl::Channel
+  : public toolkit::logkit::Channel
 {
 public:
   ErrorLogRecorder (Recorder *rec)
@@ -1145,7 +1145,7 @@ Recorder::Recorder (QObject *parent, const std::string &log_file)
 {
   //  register the listener for error messages
   mp_error_channel = new ErrorLogRecorder (this);
-  tl::error.add (mp_error_channel, false);
+  toolkit::logkit::error.add (mp_error_channel, false);
 
   tl_assert (ms_instance == 0);
   ms_instance = this;
@@ -1561,7 +1561,7 @@ Recorder::eventFilter (QObject *object, QEvent *event)
         for (QWidget *w = rec; w != 0; w = w->parentWidget ()) {
           QApplication::instance ()->sendEvent (w, &event);
           if (event.isAccepted ()) {
-            tl::info << geo::to_string (QObject::tr ("Probed widget ")) << widget_to_path (w);
+            LOGI << geo::to_string (QObject::tr ("Probed widget ")) << widget_to_path (w);
             return true;
           }
         } 
@@ -1571,7 +1571,7 @@ Recorder::eventFilter (QObject *object, QEvent *event)
           geo::Variant p = probe_std (w);
           if (! p.is_nil ()) {
             probe (w, p);
-            tl::info << geo::to_string (QObject::tr ("Probed widget ")) << widget_to_path (w);
+            LOGI << geo::to_string (QObject::tr ("Probed widget ")) << widget_to_path (w);
             return true;
           }
         } 
@@ -1693,15 +1693,15 @@ Player::timer ()
     mp_timer->setSingleShot (true);
     mp_timer->start (m_ms);
     try {
-      if (tl::verbosity () >= 10) {
+      if (toolkit::logkit::verbosity () >= 10) {
         std::ostringstream info;
         info.imbue (std::locale ("C"));
         m_events [m_playing_index]->write (info, false /*no endl*/); 
-        tl::info << m_events [m_playing_index]->xml_line () << ": " << info.str ();
+        LOGI << m_events [m_playing_index]->xml_line () << ": " << info.str ();
       }
       m_events [m_playing_index++]->issue_event ();
     } catch (tl::Exception &ex) {
-      tl::error << ex.msg ();
+      LOGE << ex.msg ();
       exit (1);
     }
   } else {

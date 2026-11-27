@@ -176,7 +176,7 @@ JobBase::~JobBase ()
 void
 JobBase::log_error (const std::string &s)
 {
-  tl::error << tl::to_string (tr ("Worker thread: ")) << s;
+  LOGE << tl::to_string (tr ("Worker thread: ")) << s;
 
   m_lock.lock ();
   if (m_error_messages.size () == max_errors) {

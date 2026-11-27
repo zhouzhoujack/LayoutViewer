@@ -91,7 +91,7 @@ RecentConfigurationPage::get_stored_values () const
     }
 
   } catch (tl::Exception &ex) {
-    tl::error << geo::to_string (tr ("Error reading configuration item ")) << m_recent_cfg_name << ": " << ex.msg ();
+    LOGE << geo::to_string (tr ("Error reading configuration item ")) << m_recent_cfg_name << ": " << ex.msg ();
     values.clear ();
   }
 
@@ -155,7 +155,7 @@ RecentConfigurationPage::render_to (QTreeWidgetItem *item, int column, const std
       try {
         geo::from_string (values [column], f);
       } catch (tl::Exception &ex) {
-        tl::error << geo::to_string (tr ("Configuration error (ArrayFlag/Bool): ")) << ex.msg ();
+        LOGE << geo::to_string (tr ("Configuration error (ArrayFlag/Bool): ")) << ex.msg ();
       }
       static QString checkmark = QString::fromUtf8 ("\xe2\x9c\x93");
       item->setText (column, f ? checkmark : QString ()); // "checkmark"
@@ -169,7 +169,7 @@ RecentConfigurationPage::render_to (QTreeWidgetItem *item, int column, const std
       try {
         l = lp_iter_from_string (view (), values [column]);
       } catch (tl::Exception &ex) {
-        tl::error << geo::to_string (tr ("Configuration error (Layer): ")) << ex.msg ();
+        LOGE << geo::to_string (tr ("Configuration error (Layer): ")) << ex.msg ();
       }
       if (! l.is_null () && ! l.at_end ()) {
         item->setIcon (column, lay::LayerTreeModel::icon_for_layer (l, view (), icon_size, icon_size, 0, true));
@@ -205,7 +205,7 @@ RecentConfigurationPage::render_to (QTreeWidgetItem *item, int column, const std
           try {
             geo::from_string (values [flag_column], is_array);
           } catch (tl::Exception &ex) {
-            tl::error << geo::to_string (tr ("Configuration error (IntIfArray/DoubleIfArray): ")) << ex.msg ();
+            LOGE << geo::to_string (tr ("Configuration error (IntIfArray/DoubleIfArray): ")) << ex.msg ();
           }
           break;
         }
@@ -268,7 +268,7 @@ RecentConfigurationPage::render_to (QTreeWidgetItem *item, int column, const std
       try {
         pcp = pcell_parameters_from_string (values [column]);
       } catch (tl::Exception &ex) {
-        tl::error << geo::to_string (tr ("Configuration error (PCellParameters): ")) << ex.msg ();
+        LOGE << geo::to_string (tr ("Configuration error (PCellParameters): ")) << ex.msg ();
       }
       std::string r;
       for (std::map<std::string, geo::Variant>::const_iterator p = pcp.begin (); p != pcp.end (); ++p) {

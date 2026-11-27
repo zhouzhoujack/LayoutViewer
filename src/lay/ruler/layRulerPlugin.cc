@@ -7,6 +7,7 @@
 
 #include "tlString.h"
 #include "tlAssert.h"
+#include "tlLog.h"
 
 #include "layPlugin.h"
 #include "layRenderer.h"

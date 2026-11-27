@@ -58,11 +58,11 @@ DeferredMethodSchedulerQt::timer ()
     try {
       do_execute ();
     } catch (tl::Exception &ex) {
-      tl::error << tl::to_string (QObject::tr ("Exception caught: ")) << ex.msg ();
+      LOGE << tl::to_string (QObject::tr ("Exception caught: ")) << ex.msg ();
     } catch (std::exception &ex) {
-      tl::error << tl::to_string (QObject::tr ("Exception caught: ")) << ex.what ();
+      LOGE << tl::to_string (QObject::tr ("Exception caught: ")) << ex.what ();
     } catch (...) {
-      tl::error << tl::to_string (QObject::tr ("Unspecific exception caught"));
+      LOGE << tl::to_string (QObject::tr ("Unspecific exception caught"));
     }
   }
 }

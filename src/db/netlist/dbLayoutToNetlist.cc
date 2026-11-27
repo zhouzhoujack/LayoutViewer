@@ -11,6 +11,7 @@
 #include "dbLayoutVsSchematicFormatDefs.h"
 #include "dbShapeProcessor.h"
 #include "tlGlobPattern.h"
+#include "tlLog.h"
 
 namespace db
 {
@@ -386,7 +387,7 @@ void LayoutToNetlist::extract_netlist ()
   netex.set_include_floating_subcircuits (m_include_floating_subcircuits);
   netex.extract_nets (dss (), m_layout_index, m_conn, *mp_netlist, m_net_clusters);
 
-  if (tl::verbosity () >= 41) {
+  if (toolkit::logkit::verbosity () >= 41) {
     MemStatisticsCollector m (false);
     mem_stat (&m, db::MemStatistics::None, 0);
     m.print ();
@@ -1444,8 +1445,8 @@ db::Region LayoutToNetlist::antenna_check (const db::Region &gate, double gate_a
             ametal += pmetal_int * dbu * metal_perimeter_factor;
           }
 
-          if (tl::verbosity () >= 50) {
-            tl::info << "cell [" << ly.cell_name (*cid) << "]: agate=" << tl::to_string (agate) << ", ametal=" << tl::to_string (ametal) << ", r=" << tl::sprintf ("%.12g", r);
+          if (toolkit::logkit::verbosity () >= 50) {
+            LOGI << "cell [" << ly.cell_name (*cid) << "]: agate=" << tl::to_string (agate) << ", ametal=" << tl::to_string (ametal) << ", r=" << tl::sprintf ("%.12g", r);
           }
 
           if (ametal / agate > r + db::epsilon) {

@@ -549,7 +549,7 @@ DeepRegion::ensure_merged_polygons_valid () const
 
       m_merged_polygons = deep_layer ().derived ();
 
-      tl::SelfTimer timer (tl::verbosity () > base_verbosity (), "Ensure merged polygons");
+      tl::SelfTimer timer (toolkit::logkit::verbosity () > base_verbosity (), "Ensure merged polygons");
 
       db::Layout &layout = const_cast<db::Layout &> (deep_layer ().layout ());
 
@@ -1382,7 +1382,7 @@ DeepRegion::merged () const
 RegionDelegate *
 DeepRegion::merged (bool min_coherence, unsigned int min_wc) const
 {
-  tl::SelfTimer timer (tl::verbosity () > base_verbosity (), "Ensure merged polygons");
+  tl::SelfTimer timer (toolkit::logkit::verbosity () > base_verbosity (), "Ensure merged polygons");
 
   db::Layout &layout = const_cast<db::Layout &> (deep_layer ().layout ());
 

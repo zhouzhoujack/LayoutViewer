@@ -474,7 +474,7 @@ bool
 SAXHandler::warning (const QXmlParseException &ex)
 {
   tl::XMLLocatedException lex (tl::to_string (ex.message ()), ex.lineNumber (), ex.columnNumber ());
-  tl::warn << lex.msg ();
+  LOGW << lex.msg ();
   //  continue
   return true;
 }

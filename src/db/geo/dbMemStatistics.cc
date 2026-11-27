@@ -93,26 +93,26 @@ MemStatisticsCollector::print ()
 
   if (m_detailed) {
 
-    tl::info << "Memory usage per type:";
+    LOGI << "Memory usage per type:";
     for (std::map<const std::type_info *, std::pair<size_t, size_t> >::const_iterator t = m_per_type.begin (); t != m_per_type.end (); ++t) {
-      tl::info << "  " << demangle (t->first->name ()) << ": " << t->second.first << " (used) " << t->second.second << " (reqd)";
+      LOGI << "  " << demangle (t->first->name ()) << ": " << t->second.first << " (used) " << t->second.second << " (reqd)";
     }
 
-    tl::info << "Memory usage per category:";
+    LOGI << "Memory usage per category:";
     for (std::map<std::pair<purpose_t, int>, std::pair<size_t, size_t> >::const_iterator t = m_per_cat.begin (); t != m_per_cat.end (); ++t) {
-      tl::info << "  " << p2s[t->first.first] << "[" << t->first.second << "]: " << t->second.first << " (used) " << t->second.second << " (reqd)";
+      LOGI << "  " << p2s[t->first.first] << "[" << t->first.second << "]: " << t->second.first << " (used) " << t->second.second << " (reqd)";
     }
 
   }
 
-  tl::info << "Memory usage per master category:";
+  LOGI << "Memory usage per master category:";
   std::pair<size_t, size_t> tot;
   for (std::map<purpose_t, std::pair<size_t, size_t> >::const_iterator t = m_per_purpose.begin (); t != m_per_purpose.end (); ++t) {
-    tl::info << "  " << p2s[t->first] << ": " << t->second.first << " (used) " << t->second.second << " (reqd)";
+    LOGI << "  " << p2s[t->first] << ": " << t->second.first << " (used) " << t->second.second << " (reqd)";
     tot.first += t->second.first;
     tot.second += t->second.second;
   }
-  tl::info << "  Total          : " << tot.first << " (used) " << tot.second << " (reqd)";
+  LOGI << "  Total          : " << tot.first << " (used) " << tot.second << " (reqd)";
 }
 
 void

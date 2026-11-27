@@ -42,8 +42,8 @@ RedrawThread::~RedrawThread ()
 
 void RedrawThread::layout_changed ()
 {
-  if (is_running () && tl::verbosity () >= 30) {
-    tl::info << geo::to_string (QObject::tr ("Layout changed: redraw thread stopped"));
+  if (is_running () && toolkit::logkit::verbosity () >= 30) {
+    LOGI << geo::to_string (QObject::tr ("Layout changed: redraw thread stopped"));
   }
 
   //  if something changed on the layouts we observe, stop the redraw thread
@@ -207,10 +207,10 @@ RedrawThread::do_start (bool clear, const geo::Vector *shift_vector, const std::
   m_start_recursion_sentinel = true;
 
   {
-    if (tl::verbosity () >= 40) {
-      tl::info << geo::to_string (QObject::tr ("Preparing to draw"));
+    if (toolkit::logkit::verbosity () >= 40) {
+      LOGI << geo::to_string (QObject::tr ("Preparing to draw"));
     }
-    tl::SelfTimer timer (tl::verbosity () >= 41, geo::to_string (QObject::tr ("Preparing to draw")));
+    tl::SelfTimer timer (toolkit::logkit::verbosity () >= 41, geo::to_string (QObject::tr ("Preparing to draw")));
 
     //  detach from all layout objects 
     geo::RefCounted::detach_from_all_events ();
@@ -303,7 +303,7 @@ RedrawThread::do_start (bool clear, const geo::Vector *shift_vector, const std::
 
   }
 
-  if (tl::verbosity () >= 21) {
+  if (toolkit::logkit::verbosity () >= 21) {
     m_main_timer.reset (new tl::SelfTimer ("Redrawing"));
   }
 

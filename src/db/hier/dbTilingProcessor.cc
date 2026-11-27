@@ -7,6 +7,7 @@
 #include "gsiDecl.h"
 
 #include <cmath>
+#include "tlLog.h"
 
 namespace db
 {
@@ -565,11 +566,11 @@ TilingProcessorWorker::do_perform (const TilingProcessorTask *tile_task)
   eval.define_function ("_rec", new TilingProcessorReceiverFunction (mp_job->processor ()));
   eval.define_function ("_count", new TilingProcessorCountFunction (mp_job->processor ()));
 
-  if (tl::verbosity () >= (mp_job->has_tiles () ? 20 : 10)) {
-    tl::info << "TilingProcessor: script #" << (tile_task->script_index () + 1) << ", tile " << tile_task->tile_desc ();
+  if (toolkit::logkit::verbosity () >= (mp_job->has_tiles () ? 20 : 10)) {
+    LOGI << "TilingProcessor: script #" << (tile_task->script_index () + 1) << ", tile " << tile_task->tile_desc ();
   }
 
-  tl::SelfTimer timer (tl::verbosity () >= (mp_job->has_tiles () ? 21 : 11), "Elapsed time");
+  tl::SelfTimer timer (toolkit::logkit::verbosity () >= (mp_job->has_tiles () ? 21 : 11), "Elapsed time");
 
   tl::Expression ex;
   eval.parse (ex, tile_task->script ());
@@ -852,7 +853,7 @@ TilingProcessor::execute (const std::string &desc)
 
   //  create a tiling plan
 
-  tl::SelfTimer timer_tot (tl::verbosity () >= 11, "Total tiling processor time");
+  tl::SelfTimer timer_tot (toolkit::logkit::verbosity () >= 11, "Total tiling processor time");
 
   size_t ntiles_w = 0, ntiles_h = 0;
   double tile_width = 0.0, tile_height = 0.0;

@@ -41,6 +41,7 @@
 #include <QFileDialog>
 #include <QHeaderView>
 #include <QResource>
+#include "tlLog.h"
 
 namespace lay
 {
@@ -504,13 +505,13 @@ MacroEditorDialog::MacroEditorDialog (lay::Dispatcher *pr, lym::MacroCollection 
           }
           m_macro_templates.push_back (m);
 
-          if (tl::verbosity () >= 20) {
-            tl::info << "Using macro template from " << url << " (with name " << m->name () << ")";
+          if (toolkit::logkit::verbosity () >= 20) {
+            LOGI << "Using macro template from " << url << " (with name " << m->name () << ")";
           }
 
         } catch (tl::Exception &ex) {
           delete m;
-          tl::error << "Reading " << url << ": " << ex.msg ();
+          LOGE << "Reading " << url << ": " << ex.msg ();
         }
 
       }
@@ -546,8 +547,8 @@ MacroEditorDialog::MacroEditorDialog (lay::Dispatcher *pr, lym::MacroCollection 
         m->load_from (tl::to_string (dir.filePath (*f)));
         m->set_readonly (true);
         m_macro_templates.push_back (m);
-        if (tl::verbosity () >= 20) {
-          tl::info << "Using macro template from " << tl::to_string (dir.filePath (*f)) << " (with name " << m->name () << ")";
+        if (toolkit::logkit::verbosity () >= 20) {
+          LOGI << "Using macro template from " << tl::to_string (dir.filePath (*f)) << " (with name " << m->name () << ")";
         }
 
       } catch (...) {
@@ -562,9 +563,9 @@ MacroEditorDialog::MacroEditorDialog (lay::Dispatcher *pr, lym::MacroCollection 
   for (tl::Registrar<lym::MacroInterpreter>::iterator cls = tl::Registrar<lym::MacroInterpreter>::begin (); cls != tl::Registrar<lym::MacroInterpreter>::end (); ++cls) {
     size_t n = m_macro_templates.size ();
     cls->get_templates (m_macro_templates);
-    if (tl::verbosity () >= 20) {
+    if (toolkit::logkit::verbosity () >= 20) {
       for (std::vector<lym::Macro *>::const_iterator t = m_macro_templates.begin () + n; t != m_macro_templates.end (); ++t) {
-        tl::info << "Using DSL macro template for " << (*t)->dsl_interpreter () << " with name " << (*t)->name ();
+        LOGI << "Using DSL macro template for " << (*t)->dsl_interpreter () << " with name " << (*t)->name ();
       }
     }
   }

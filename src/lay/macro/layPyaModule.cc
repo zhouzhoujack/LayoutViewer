@@ -11,6 +11,7 @@
 #include "layPyaUtils.h"
 
 #include <map>
+#include "tlLog.h"
 
 namespace pya
 {
@@ -183,7 +184,7 @@ public:
     } else {
 
       if (m_table [n->second].is_protected () != mb->is_protected ()) {
-        tl::warn << "Class " << mp_cls_decl->name () << ": method '" << name << " is both a protected and non-protected";
+        LOGW << "Class " << mp_cls_decl->name () << ": method '" << name << " is both a protected and non-protected";
       }
 
       m_table [n->second].add (mb);
@@ -385,7 +386,7 @@ set_type_attr (PyTypeObject *type, const std::string &name, PythonRef &attr)
 {
   tl_assert (attr.get () != NULL);
   if (type->tp_dict != NULL && PyDict_GetItemString ((PyObject *) type, name.c_str ()) != NULL) {
-    tl::warn << "Ambiguous attribute name " << name << " in class " << type->tp_name;
+    LOGW << "Ambiguous attribute name " << name << " in class " << type->tp_name;
   } else {
     PyObject_SetAttrString ((PyObject *) type, name.c_str (), attr.get ());
   }
@@ -2597,8 +2598,8 @@ PythonModule::make_classes (const char *mod_name)
       if (name.empty ()) {
 
         //  drop non-standard names
-        if (tl::verbosity () >= 20) {
-          tl::warn << tl::to_string (tr ("Class ")) << (*c)->name () << ": " << tl::to_string (tr ("no Python mapping for method ")) << mt->name (mid);
+        if (toolkit::logkit::verbosity () >= 20) {
+          LOGW << tl::to_string (tr ("Class ")) << (*c)->name () << ": " << tl::to_string (tr ("no Python mapping for method ")) << mt->name (mid);
         }
 
         add_python_doc (**c, mt, int (mid), tl::to_string (tr ("This method is not available for Python")));
@@ -2627,8 +2628,8 @@ PythonModule::make_classes (const char *mod_name)
         } else if (is_reserved_word (name)) {
 
           //  drop non-standard names
-          if (tl::verbosity () >= 20) {
-            tl::warn << tl::to_string (tr ("Class ")) << (*c)->name () << ": " << tl::to_string (tr ("no Python mapping for method (reserved word) ")) << name;
+          if (toolkit::logkit::verbosity () >= 20) {
+            LOGW << tl::to_string (tr ("Class ")) << (*c)->name () << ": " << tl::to_string (tr ("no Python mapping for method (reserved word) ")) << name;
           }
 
           name += "_";
@@ -2739,8 +2740,8 @@ PythonModule::make_classes (const char *mod_name)
             PythonRef attr (desc);
             set_type_attr (type, name, attr);
 
-          } else if (tl::verbosity () >= 20) {
-            tl::warn << "Upper case method name encountered which cannot be used as a Python constant (more than one overload or at least one argument): " << (*c)->name () << "." << name;
+          } else if (toolkit::logkit::verbosity () >= 20) {
+            LOGW << "Upper case method name encountered which cannot be used as a Python constant (more than one overload or at least one argument): " << (*c)->name () << "." << name;
             add_python_doc (**c, mt, int (mid), tl::to_string (tr ("This attribute is not available for Python")));
           }
 
@@ -2865,7 +2866,7 @@ PythonModule::make_classes (const char *mod_name)
         Py_XDECREF (attr_class);
         PyErr_Clear ();
 
-        tl::warn << "Unable to install a static/non-static disambiguator for " << *a << " in class " << (*c)->name ();
+        LOGW << "Unable to install a static/non-static disambiguator for " << *a << " in class " << (*c)->name ();
 
       } else {
 

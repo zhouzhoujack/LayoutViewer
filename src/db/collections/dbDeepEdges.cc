@@ -508,7 +508,7 @@ DeepEdges::ensure_merged_edges_valid () const
 
       m_merged_edges = deep_layer ().derived ();
 
-      tl::SelfTimer timer (tl::verbosity () > base_verbosity (), "Ensure merged edges");
+      tl::SelfTimer timer (toolkit::logkit::verbosity () > base_verbosity (), "Ensure merged edges");
 
       db::Layout &layout = const_cast<db::Layout &> (deep_layer ().layout ());
 

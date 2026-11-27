@@ -170,7 +170,7 @@ DisplayState::cellview (unsigned int index, lay::LayoutHandle *layout_h) const
         cell_path.push_back (pci.second);
         valid_path = true;
       } else {
-        tl::warn << geo::to_string (QObject::tr ("Cellname cannot be reconstructed: ")) << *cn;
+        LOGW << geo::to_string (QObject::tr ("Cellname cannot be reconstructed: ")) << *cn;
         valid_path = false;
         break;
       }
@@ -195,7 +195,7 @@ DisplayState::cellview (unsigned int index, lay::LayoutHandle *layout_h) const
           pc = &layout_h->layout ().cell (ie.second.inst_ptr.cell_index ());
           valid_path = true;
         } else {
-          tl::warn << geo::to_string (QObject::tr ("Specific instance cannot be reconstructed: instantiated cell is ")) << ci->cell_name
+          LOGW << geo::to_string (QObject::tr ("Specific instance cannot be reconstructed: instantiated cell is ")) << ci->cell_name
                    << geo::to_string (QObject::tr (", parent cell is ")) << layout_h->layout ().cell_name (pc->cell_index ());
           valid_path = false;
         }

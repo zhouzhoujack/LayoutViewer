@@ -227,7 +227,7 @@ LONG WINAPI ExceptionHandler(PEXCEPTION_POINTERS pExceptionInfo)
 
   } else {
 
-    tl::error << text << tl::noendl;
+    LOGE << text << toolkit::logkit::noendl;
     return EXCEPTION_EXECUTE_HANDLER;
 
   }
@@ -421,7 +421,7 @@ void signal_handler (int signo, siginfo_t *si, void *)
 
   } else {
 
-    tl::error << text << tl::noendl;
+    LOGE << text << toolkit::logkit::noendl;
     _exit (signo);
 
   }

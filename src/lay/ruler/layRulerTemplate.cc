@@ -264,7 +264,7 @@ Template::from_string (const std::string &s)
     }
     
   } catch (tl::Exception &ex) {
-    tl::error << ex.msg ();
+    LOGE << ex.msg ();
     r.clear ();
   } catch (...) {
     r.clear ();

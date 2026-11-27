@@ -5,6 +5,7 @@
 #include "tlException.h"
 #include "tlString.h"
 #include "tlClassRegistry.h"
+#include "tlLog.h"
 
 namespace db
 {
@@ -254,7 +255,7 @@ void
 GDS2Reader::warn (const std::string &msg) 
 {
   // TODO: compress
-  tl::warn << msg 
+  LOGW << msg 
            << tl::to_string (tr (" (position=")) << m_stream.pos ()
            << tl::to_string (tr (", record number=")) << m_recnum
            << tl::to_string (tr (", cell=")) << cellname ().c_str ()

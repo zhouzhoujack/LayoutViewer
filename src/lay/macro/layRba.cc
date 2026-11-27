@@ -488,16 +488,16 @@ public:
     } else {
 
       if (ctor && ! m_table [n->second].is_ctor ()) {
-        tl::warn << "Class " << mp_cls_decl->name () << ": method '" << name << " is both a constructor and non-constructor";
+        LOGW << "Class " << mp_cls_decl->name () << ": method '" << name << " is both a constructor and non-constructor";
       }
       if (m_table [n->second].is_protected () != mb->is_protected ()) {
-        tl::warn << "Class " << mp_cls_decl->name () << ": method '" << name << " is both a protected and non-protected";
+        LOGW << "Class " << mp_cls_decl->name () << ": method '" << name << " is both a protected and non-protected";
       }
       if (m_table [n->second].is_signal () != mb->is_signal ()) {
-        tl::warn << "Class " << mp_cls_decl->name () << ": method '" << name << " is both a signal and non-signal";
+        LOGW << "Class " << mp_cls_decl->name () << ": method '" << name << " is both a signal and non-signal";
       }
       if (m_table [n->second].is_signal () && mb->is_signal ()) {
-        tl::warn << "Class " << mp_cls_decl->name () << ": method '" << name << " is a signal with ambiguous signature";
+        LOGW << "Class " << mp_cls_decl->name () << ": method '" << name << " is a signal with ambiguous signature";
       }
 
       m_table [n->second].add (mb);
@@ -1639,7 +1639,7 @@ rba_init (RubyInterpreterPrivateData *d)
         /* Note: Ruby does not support static protected functions, hence we have them (i.e. QThread::usleep).
          *       Do we silently create public ones from them:
         if (mt->is_protected (mid)) {
-          tl::warn << "static '" << mt->name (mid) << "' method cannot be protected in class " << c->name ();
+          LOGW << "static '" << mt->name (mid) << "' method cannot be protected in class " << c->name ();
         }
         */
 
@@ -1711,7 +1711,7 @@ rba_init (RubyInterpreterPrivateData *d)
       rb_define_const (c->klass, c->name.c_str (), ret);
 
     } catch (tl::Exception &ex) {
-      tl::warn << "Got exception '" << ex.msg () << "' while defining constant " << c->name;
+      LOGW << "Got exception '" << ex.msg () << "' while defining constant " << c->name;
     }
 
   }
@@ -1745,7 +1745,7 @@ rba_init (RubyInterpreterPrivateData *d)
 RubyInterpreter::RubyInterpreter ()
   : d (new RubyInterpreterPrivateData ())
 {
-  tl::SelfTimer timer (tl::verbosity () >= 21, "Initializing Ruby");
+  tl::SelfTimer timer (toolkit::logkit::verbosity () >= 21, "Initializing Ruby");
 
   tl_assert (! sp_rba_interpreter);
   sp_rba_interpreter = this;
@@ -1856,7 +1856,7 @@ RubyInterpreter::initialize (int &main_argc, char **main_argv, int (*main_func) 
           std::string path_file = tl::combine_path (inst_dir, ".ruby-paths.txt");
           if (tl::file_exists (path_file)) {
 
-            tl::log << tl::to_string (tr ("Reading Ruby path from ")) << path_file;
+            LOGI << tl::to_string (tr ("Reading Ruby path from ")) << path_file;
 
             tl::InputStream path_file_stream (path_file);
             std::string path_file_text = path_file_stream.read_all ();
@@ -1878,9 +1878,9 @@ RubyInterpreter::initialize (int &main_argc, char **main_argv, int (*main_func) 
         }
 
       } catch (tl::Exception &ex) {
-        tl::error << tl::to_string (tr ("Evaluation of Ruby path expression failed")) << ": " << ex.msg ();
+        LOGE << tl::to_string (tr ("Evaluation of Ruby path expression failed")) << ": " << ex.msg ();
       } catch (...) {
-        tl::error << tl::to_string (tr ("Evaluation of Ruby path expression failed"));
+        LOGE << tl::to_string (tr ("Evaluation of Ruby path expression failed"));
       }
 
 #endif

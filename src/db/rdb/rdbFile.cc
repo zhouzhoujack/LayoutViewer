@@ -9,6 +9,7 @@
 
 #include <fstream>
 #include <string>
+#include "tlLog.h"
 
 namespace rdb
 {
@@ -108,7 +109,7 @@ rdb::Database::save (const std::string &fn)
   make_rdb_structure (this).write (os, *this); 
   set_filename (fn);
 
-  tl::log << "Saved RDB to " << fn;
+  LOGI << "Saved RDB to " << fn;
 }
 
 // -------------------------------------------------------------
@@ -126,7 +127,7 @@ public:
 
   virtual void read (Database &db) 
   {
-    tl::SelfTimer timer (tl::verbosity () >= 11, "Reading marker database file");
+    tl::SelfTimer timer (toolkit::logkit::verbosity () >= 11, "Reading marker database file");
     tl::XMLStreamSource in (m_input_stream, tl::to_string (tr ("Reading RDB")));
     make_rdb_structure (&db).parse (in, db); 
   }
