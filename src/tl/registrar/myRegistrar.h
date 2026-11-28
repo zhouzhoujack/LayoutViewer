@@ -72,7 +72,6 @@ private:
     std::map<RegistryKey, T*> map_;
 };
 
-
 template <typename T>
 class Registrar {
 public:
